@@ -81,6 +81,8 @@ bench/server.sh stop && make system2      # opcional: Sistema 2 con Ollama qwen3
 [MIT](LICENSE) © 2026 abxda. Los pesos del modelo (no incluidos) conservan su propia licencia (Apache-2.0).
 
 ## Créditos
+- **Construido con:** Claude Opus 5.5 (arquitectura, código, benchmark y análisis) y GPT-6 Astra
+  (diseño gráfico del juego), bajo la dirección del Dr. Coronado (@abxda).
 - **Método de lectura de logits:** [SemIf](https://github.com/TheoLeeCJ/SemIf) (MIT). **Perfil de prompt
   markdown:** [reflex](https://github.com/kshetrajna12/reflex) (MIT).
 - **Modelo:** Qwen3.5-4B (Qwen, Apache-2.0), GGUF de bartowski. Motor: llama.cpp / llama-cpp-python (MIT).

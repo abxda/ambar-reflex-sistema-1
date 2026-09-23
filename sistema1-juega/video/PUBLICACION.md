@@ -1,6 +1,7 @@
 # Publicación — Ámbar Reflex: un clon local de Jev jugando un videojuego retro
 
 Autor: **Dr. Coronado (@abxda)** · Repositorio: https://github.com/abxda/ambar-reflex-sistema-1
+Hecho con **Claude Opus 5.5** (arquitectura, código, benchmark y análisis) y **GPT-6 Astra** (diseño gráfico).
 
 Cifras tomadas de `../results.md`: 5 partidas en tiempo real con la misma semilla, RTX 3060.
 
@@ -45,6 +46,9 @@ más memoria y un poco más de tiempo por jugada. Es lo siguiente que quiero pro
 En el video se ve en vivo lo que «piensa» en cada decisión, incluido el JSON real que viaja entre el
 juego y el modelo. La lección: el formato está garantizado; la corrección no.
 
+Lo construí trabajando con dos IAs: **Claude Opus 5.5** se encargó de la arquitectura, el código, las
+mediciones y el análisis, y **GPT-6 Astra** fue el diseñador gráfico del juego. 🤝
+
 Todo el código es abierto: https://github.com/abxda/ambar-reflex-sistema-1
 
 — Dr. Coronado (@abxda)
@@ -57,7 +61,7 @@ Todo el código es abierto: https://github.com/abxda/ambar-reflex-sistema-1
 
 **Tuit principal** (≤ 280 caracteres):
 
-> Hice un clon local de Jev: Qwen3.5-4B a 8 bits en una RTX 3060, sin generar texto. En un run-and-gun ochentero decide en 408 ms y llega al 24.9 % del nivel; escribiendo JSON: 1041 ms y 10.3 %. ¿Con un modelo más grande? Voy por eso 👇 — Dr. Coronado (@abxda)
+> Clon local de Jev: Qwen3.5-4B a 8 bits en una RTX 3060, sin generar texto. En un run-and-gun ochentero decide en 408 ms y llega al 24.9 % del nivel; escribiendo JSON: 1041 ms y 10.3 %. Hecho con Opus 5.5 y GPT-6 Astra. — Dr. Coronado (@abxda) https://github.com/abxda/ambar-reflex-sistema-1
 
 **Hilo:**
 
@@ -82,6 +86,10 @@ avance de 15.6 % a 26.2 %. El formato está garantizado; la corrección no. — 
 
 6/ Y todo esto con un modelo de solo 4B. La arquitectura acepta cualquier modelo abierto: con uno más grande
 (9B, 27B) debería decidir mejor, a cambio de memoria y latencia. Es el siguiente experimento.
+— Dr. Coronado (@abxda)
+
+7/ Créditos: lo construí con Claude Opus 5.5 (arquitectura, código, benchmark y análisis) y GPT-6 Astra
+(diseño gráfico del juego). Código, logs y videos reproducibles:
 https://github.com/abxda/ambar-reflex-sistema-1 — Dr. Coronado (@abxda)
 
 #IA #LLM #GameDev #OpenSource
@@ -124,6 +132,9 @@ La lección práctica va más allá de los videojuegos: ruteo, moderación y pip
 resolverse en local, sin costo por petición y con salidas que nunca rompen el esquema. Eso sí: el formato
 está garantizado; la corrección no, y hay que medirla con datos propios.
 
+Lo construí en colaboración con dos modelos: **Claude Opus 5.5** (arquitectura, código, benchmark y
+análisis) y **GPT-6 Astra** (diseño gráfico del juego).
+
 Código, datos, logs y video (reproducibles) en: https://github.com/abxda/ambar-reflex-sistema-1
 
 — Dr. Coronado (@abxda)
@@ -145,4 +156,5 @@ Marca de agua @abxda. — Dr. Coronado (@abxda)
 
 Este proyecto es un clon **independiente** de Jev: reproduce su API y su idea de «Sistema 1» con modelos
 abiertos. No está afiliado a TypeSafe AI ni usa su código o sus pesos. El juego y todos sus assets son
-originales. — Dr. Coronado (@abxda)
+originales. Desarrollado con Claude Opus 5.5 (arquitectura, código y medición) y GPT-6 Astra (diseño
+gráfico). Repositorio: https://github.com/abxda/ambar-reflex-sistema-1 — Dr. Coronado (@abxda)
