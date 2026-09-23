@@ -1,5 +1,9 @@
 # Sistema 1 juega — decisiones tipadas locales (compatibles con Jev) jugando un run-and-gun ochentero
 
+![Ámbar Reflex jugado en tiempo real por Sistema 1: el juego a la izquierda y, a la derecha, las probabilidades de cada decisión y el flujo JSON real de /v1/systemone](sistema1-juega/screenshots/portada.png)
+
+*Partida real `rt-D-1987-2`, 2.3 s de juego: la decisión llega con confianza 0.95 (ACTÚA) y el comando dispara al frente. A la derecha, el flujo JSON de la llamada.*
+
 Un modelo de lenguaje de 4B **que no genera texto** juega en tiempo real **Ámbar Reflex**, un run-and-gun
 original de estilo 8 bits.
 
