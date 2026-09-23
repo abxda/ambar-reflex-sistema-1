@@ -157,11 +157,12 @@ def main():
         w("El simulador es determinista, así que las etiquetas son exactas: `shoot` = hay un enemigo en pantalla; "
           "`jump`/`crouch` = hacerlo ahora evita un daño que sin hacerlo llegaría en 30 frames (rollout contrafactual); "
           "`aim` = dirección del enemigo alineado más cercano.\n")
-        w("| Modo | shoot exactitud | jump exactitud (positivos) | jump recall | crouch exactitud (positivos) | aim exactitud (n) |")
-        w("|---|--:|--:|--:|--:|--:|")
+        w("| Modo | shoot exactitud | jump exactitud (positivos) | jump recall | jump precisión | crouch exactitud (positivos) | aim exactitud (n) |")
+        w("|---|--:|--:|--:|--:|--:|--:|")
         for cfg, a in R["accuracy"].items():
-            w(f"| {LABELS[cfg]} | {f3(a['shoot']['acc'])} | {f3(a['jump']['acc'])} ({a['jump']['positives']}) | "
-              f"{f3(a['jump']['recall'])} | {f3(a['crouch']['acc'])} ({a['crouch']['positives']}) | "
+            w(f"| {LABELS[cfg]} | {f3(a['shoot']['acc'])} ({f0(100 * a['shoot']['acc'])} %) | {f3(a['jump']['acc'])} ({a['jump']['positives']}) | "
+              f"{f3(a['jump']['recall'])} | {f3(a['jump']['precision'])} ({f0(100 * a['jump']['precision'])} %) | "
+              f"{f3(a['crouch']['acc'])} ({a['crouch']['positives']}) | "
               f"{f3(a['aim']['acc_when_aligned'])} ({a['aim']['n']}) |")
         w("")
     if cal:

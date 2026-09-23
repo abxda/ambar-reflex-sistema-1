@@ -12,9 +12,11 @@ NUM = re.compile(r"(?<![\w.])\d+(?:[.,]\d+)?(?=\s?(?:%|ms|frames|tokens))")
 
 def test_social_numbers_come_from_results():
     results = (ROOT / "results.md").read_text()
-    social = (ROOT / "social.md").read_text()
-    missing = [n for n in set(NUM.findall(social)) if n not in results]
-    assert not missing, f"numbers in social.md not found in results.md: {missing}"
+    tokens = set(re.findall(r"\d+(?:\.\d+)?", results))
+    for doc in ("social.md", "video/PUBLICACION.md"):
+        text = (ROOT / doc).read_text()
+        missing = [n for n in set(NUM.findall(text)) if n not in tokens]
+        assert not missing, f"numbers in {doc} not found as figures in results.md: {missing}"
 
 
 def test_latency_recomputes_from_logs():

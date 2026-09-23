@@ -173,19 +173,120 @@ def draw_panel(s: pygame.Surface, rect: pygame.Rect, view: RunView, world, frame
         pygame.draw.lines(s, AMBER, False, pts, 2)
         font.draw(s, f"{hi:.0f}", x + bw - font.width(f"{hi:.0f}", 2) - 4, y + 3, BRIGHT, 2)
     y += sh + 12
-    # scrolling log
-    font.draw(s, "LOG", x, y, DIM, 2)
-    y += 22
-    lines = max(0, (y0 + H - 50 - y) // 20)
-    for rec in (view.arrived[-lines:] if lines else []):
-        act = rec["action"]
-        mv = {1: "AVZ", -1: "RET", 0: "QTO"}[act["move"]]
-        parts = f"{rec['arr_frame'] / FPS:6.1f}S {mv} {act['aim']:<2} {'DISP' if act['shoot'] else '----'} " \
-                f"{'SALTA' if act['jump'] else '-----'} {'AGACH' if act['crouch'] else '-----'} " \
-                f"C{rec['conf']:.2f} {TAG_TEXT[rec['tag']]}"
-        font.draw(s, parts, x, y, TAG_COLOR[rec["tag"]], 2 if bw > 700 else 1)
-        y += 20
+    # live JSON stream of the real /v1/systemone calls (replaces the plain text log; keeps its data)
+    draw_json_stream(s, pygame.Rect(x, y, bw, y0 + H - 46 - y), view, frame)
     watermark(s, x0 + W - font.width(WATERMARK, 3) - pad, y0 + H - 40, 3)
+
+
+JSON_KEY, JSON_STR, JSON_NUM, JSON_PUNCT = BRIGHT, AMBER, (108, 165, 175), DIM
+SCROLL_FRAMES = 10  # a new call slides in over 1/6 s
+
+
+def _json_lines(rec: dict, max_chars: int) -> list:
+    """One call as short, colored JSON lines: [(text, color), ...] per line. Values are the logged ones
+    (request `state` and the server's raw answers), rounded to 2 decimals for width only."""
+    a = rec["raw"]["answers"]
+    act = rec["action"]
+    mv = {1: "AVZ", -1: "RET", 0: "QTO"}[act["move"]]
+    what = " ".join(t for t, on in ((mv, True), (act["aim"], True), ("DISP", act["shoot"]),
+                                    ("SALTA", act["jump"]), ("AGACH", act["crouch"])) if on)
+    state = rec.get("state", "")
+    usage = rec["raw"].get("usage", {})
+
+    def kv(k, v, last=False):
+        seg = [(f'"{k}"', JSON_KEY), (": ", JSON_PUNCT)]
+        if isinstance(v, str):
+            seg.append((f'"{v}"', JSON_STR))
+        elif isinstance(v, dict):
+            seg.append(("{", JSON_PUNCT))
+            items = list(v.items())
+            for i, (kk, vv) in enumerate(items):
+                seg += kv(kk, vv, i == len(items) - 1)
+            seg.append(("}", JSON_PUNCT))
+        else:
+            seg.append((f"{v:.2f}" if isinstance(v, float) else str(v), JSON_NUM))
+        if not last:
+            seg.append((", ", JSON_PUNCT))
+        return seg
+
+    c = lambda k: {"choice": a[k]["choice"], "confidence": float(a[k]["confidence"])}
+    n = lambda k: {"noul": float(a[k]["noul"])}
+    tag = rec["tag"]
+    head = f"→ {rec['req_frame'] / FPS:4.1f}S POST "
+    room = max_chars - len(head) - 13
+    state_txt = state if len(state) <= room else state[: max(4, room - 1)] + "…"
+    return [
+        [],  # separator above each call
+        [(head, DIM), ("{", JSON_PUNCT)] + kv("state", state_txt, True) + [("}", JSON_PUNCT)],
+        [(f"← {rec['rtt_ms']:.0f} MS · 200 OK · ", DIM), (f"{TAG_TEXT[tag]} ", TAG_COLOR[tag]), (what, TAG_COLOR[tag])],
+        [("{", JSON_PUNCT)] + kv("move", c("move")),
+        [(" ", JSON_PUNCT)] + kv("aim", c("aim")),
+        [(" ", JSON_PUNCT)] + kv("jump", n("jump")) + kv("crouch", n("crouch")),
+        [(" ", JSON_PUNCT)] + kv("shoot", n("shoot")) + kv("danger", {"score": float(a["danger"]["score"])}),
+        [(" ", JSON_PUNCT)] + kv("usage", {"input_tokens": usage.get("input_tokens", 0),
+                                           "output_tokens": usage.get("output_tokens", 0)}, True) + [("}", JSON_PUNCT)],
+    ]
+
+
+def _json_lines_compact(rec: dict, max_chars: int) -> list:
+    """Two lines per call for short boxes (vertical layout): request state, then response values."""
+    a = rec["raw"]["answers"]
+    tag = rec["tag"]
+    head = f"→ {rec['req_frame'] / FPS:4.1f}S "
+    room = max_chars - len(head) - 13
+    st = rec.get("state", "")
+    st = st if len(st) <= room else st[: max(4, room - 1)] + "…"
+    num = lambda v: (f"{float(v):.2f}", JSON_NUM)
+    resp = [(f"← {rec['rtt_ms']:.0f}MS ", TAG_COLOR[tag]), ("{", JSON_PUNCT)]
+    for i, (k, v) in enumerate((("move", a["move"]["choice"]), ("aim", a["aim"]["choice"]), ("jump", a["jump"]["noul"]),
+                                ("crouch", a["crouch"]["noul"]), ("shoot", a["shoot"]["noul"]))):
+        resp += [(f'"{k}"', JSON_KEY), (":", JSON_PUNCT)]
+        resp.append((f'"{v}"', JSON_STR) if isinstance(v, str) else num(v))
+        resp.append((",", JSON_PUNCT) if i < 4 else ("}", JSON_PUNCT))
+    return [[(head, DIM), ("{", JSON_PUNCT), ('"state"', JSON_KEY), (": ", JSON_PUNCT), (f'"{st}"', JSON_STR),
+             ("}", JSON_PUNCT)], resp]
+
+
+def draw_json_stream(s: pygame.Surface, rect: pygame.Rect, view: RunView, frame: int) -> None:
+    """Scrolling feed of the last calls, newest at the bottom; slides up when a response arrives."""
+    sc = 2 if rect.width >= 600 else 1
+    lh = 10 * sc
+    font.draw(s, "FLUJO /v1/systemone", rect.x, rect.y, BRIGHT, sc)
+    font.draw(s, "JSON REAL · PETICIÓN → RESPUESTA", rect.x + font.width("FLUJO /v1/systemone  ", sc), rect.y, DIM, sc)
+    box = pygame.Rect(rect.x, rect.y + lh + 6, rect.width, rect.height - lh - 6)
+    if box.height < lh * 2:
+        return
+    s.fill((6, 10, 14), box)
+    pygame.draw.rect(s, FAINT, box, 1)
+    inner = box.inflate(-12, -8)
+    max_chars = inner.width // (6 * sc)
+    recent = view.arrived[-4:]
+    if not recent:
+        font.draw(s, "ESPERANDO PRIMERA LLAMADA...", inner.x, inner.y, DIM, sc)
+        return
+    fmt = _json_lines if inner.height // lh >= 6 else _json_lines_compact
+    lines = [ln for rec in recent for ln in fmt(rec, max_chars)]
+    last_block = len(fmt(recent[-1], max_chars))
+    t = min(1.0, (frame - recent[-1]["arr_frame"]) / SCROLL_FRAMES)
+    lag = (1 - (1 - t) ** 3) * last_block - last_block   # -last_block .. 0 lines: new call slides up
+    clip = s.get_clip()
+    s.set_clip(inner)
+    n = len(lines)
+    for k, segs in enumerate(lines):
+        # bottom-anchored: the newest line rests on the bottom edge once the slide finishes
+        yy = int(inner.bottom - (n - k) * lh - lag * lh)
+        if yy + lh < inner.top or yy > inner.bottom:
+            continue
+        xx = inner.x
+        for text, color in segs:
+            room = inner.right - xx
+            if room <= 0:
+                break
+            xx = font.draw(s, text[: max(0, room // (6 * sc))], xx, yy, color, sc)
+    s.set_clip(clip)
+    # a fresh response briefly lights the frame
+    if frame - recent[-1]["arr_frame"] < 6:
+        pygame.draw.rect(s, TAG_COLOR[recent[-1]["tag"]], box, 2)
 
 
 def draw_overlay(s: pygame.Surface, game_rect: pygame.Rect, world, view: RunView, frame: int, scale: int = 4) -> None:

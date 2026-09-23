@@ -89,13 +89,14 @@ nice -n 10 .venv/bin/python -m bench.make_videos --run runs/bench/realtime/rt-D-
 for f in video/*.mp4; do echo "$f  $(md5sum < $f | cut -c1-12)  $(ffprobe -v error -show_entries stream=codec_name,width,height,r_frame_rate:format=duration -of csv=p=0 $f | tr '\n' ' ')"; done
 ```
 
-Valores esperados si el código de render **no** cambió (mismo ffmpeg/libx264):
+Valores esperados con el diseño vigente (rediseño arcade + flujo JSON, commit posterior a `4996ec9`) si el
+código de render **no** cambió (mismo ffmpeg/libx264):
 
 | Archivo | MD5 (12 primeros caracteres) | Vídeo | Duración |
 |---|---|---|---|
-| sistema1_1080p60.mp4 | `c9d3d47a5ddf` | h264 1920×1080 60/1 + aac | 27.116667 |
-| sistema1_momentos_clave.mp4 | `d59a277f04eb` | h264 1920×1080 60/1 + aac | 35.116667 |
-| sistema1_vertical_1080x1920.mp4 | `ba255395f865` | h264 1080×1920 60/1 + aac | 27.116667 |
+| sistema1_1080p60.mp4 | `536d67024b48` | h264 1920×1080 60/1 + aac | 27.116667 |
+| sistema1_momentos_clave.mp4 | `21ca5a6bf495` | h264 1920×1080 60/1 + aac | 35.116667 |
+| sistema1_vertical_1080x1920.mp4 | `e2c62eea74a5` | h264 1080×1920 60/1 + aac | 27.116667 |
 
 Si los MD5 difieren solo porque cambió la versión de ffmpeg/libx264, basta con que coincidan resolución,
 fps, códecs y duración. Además, revisa visualmente un fotograma:

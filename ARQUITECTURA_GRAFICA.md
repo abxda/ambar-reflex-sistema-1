@@ -119,7 +119,13 @@ Todo carácter sin glifo sale como `?`: agrégalo a `G` o mapéalo en `ACCENTS`,
 5. etiqueta ACTÚA / DUDA / FALLBACK con la confianza calibrada;
 6. métricas en cuadrícula de 3×3;
 7. gráfica de latencia;
-8. log con desplazamiento.
+8. **flujo JSON de `/v1/systemone`** (`draw_json_stream`): reemplaza al log de texto y conserva sus datos.
+   Cada llamada es un bloque con la petición (`→ t POST {"state": …}`) y la respuesta real del servidor
+   (`← ms · 200 OK · etiqueta` + `choice`/`confidence`/`noul`/`score`/`usage`), con resaltado de sintaxis
+   (claves `BRIGHT`, cadenas `AMBER`, números verde azulado, puntuación `DIM`). La llamada nueva entra por
+   abajo y empuja a las anteriores hacia arriba en 10 frames (`SCROLL_FRAMES`, curva ease-out), anclada al
+   borde inferior. Si el recuadro mide menos de 6 líneas (layout vertical), usa el formato compacto
+   `_json_lines_compact`, de 2 líneas por llamada. Los valores se redondean a 2 decimales solo por ancho.
 
 **Abanico de flechas** (`draw_overlay`): 8 flechas desde el pecho del soldado, con opacidad igual a la
 probabilidad de cada dirección de `aim`, más la flecha de movimiento. Se desvanecen en 0.4 s desde

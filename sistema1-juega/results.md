@@ -57,10 +57,10 @@ La primera política también exigía confianza a las preguntas noul, usando |2p
 
 El simulador es determinista, así que las etiquetas son exactas: `shoot` = hay un enemigo en pantalla; `jump`/`crouch` = hacerlo ahora evita un daño que sin hacerlo llegaría en 30 frames (rollout contrafactual); `aim` = dirección del enemigo alineado más cercano.
 
-| Modo | shoot exactitud | jump exactitud (positivos) | jump recall | crouch exactitud (positivos) | aim exactitud (n) |
-|---|--:|--:|--:|--:|--:|
-| Sistema 1 · tiempo real | 0.971 | 0.676 (20) | 0.500 | 0.712 (26) | 0.864 (81) |
-| Sistema 1 · por turnos | 0.883 | 0.433 (2) | 1.000 | 0.767 (2) | 0.444 (54) |
+| Modo | shoot exactitud | jump exactitud (positivos) | jump recall | jump precisión | crouch exactitud (positivos) | aim exactitud (n) |
+|---|--:|--:|--:|--:|--:|--:|
+| Sistema 1 · tiempo real | 0.971 (97 %) | 0.676 (20) | 0.500 | 0.182 (18 %) | 0.712 (26) | 0.864 (81) |
+| Sistema 1 · por turnos | 0.883 (88 %) | 0.433 (2) | 1.000 | 0.029 (3 %) | 0.767 (2) | 0.444 (54) |
 
 ## Calibración aplicada
 
