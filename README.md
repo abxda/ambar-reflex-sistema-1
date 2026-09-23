@@ -40,7 +40,7 @@ Autoría: **@abxda**.
 
 ### A. Solo regenerar los videos desde los logs (cualquier Linux, sin GPU)
 ```bash
-git clone <este-repo> && cd <este-repo>/sistema1-juega
+git clone https://github.com/abxda/ambar-reflex-sistema-1.git && cd ambar-reflex-sistema-1/sistema1-juega
 make setup                      # requiere uv y ffmpeg con libx264/aac
 make test                       # 10 pruebas: esquema, determinismo, repetición == logs, consistencia de cifras
 .venv/bin/python -m bench.make_videos --run runs/bench/realtime/rt-D-1987-2
