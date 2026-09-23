@@ -1,0 +1,114 @@
+{
+ "request": {
+  "state": "Soldado en suelo, arma N, vidas 3, avance 0%. Terreno: plano. Amenazas (px; dx+ adelante; dy = arriba(+)/abajo(-) de la línea de tiro, 0 = en la mira; altura sobre el suelo): ninguna.",
+  "model": "jev-latest",
+  "questions": {
+   "move": {
+    "type": "choice",
+    "instructions": "La misión es avanzar hacia la derecha hasta el jefe. ¿Cómo moverse ahora?",
+    "criteria": {
+     "avanzar": "ir adelante (dx+); lo normal si nada lo impide",
+     "retroceder": "ir atrás solo si algo muy cercano obliga a huir",
+     "quieto": "esperar solo si avanzar lleva directo a una bala"
+    }
+   },
+   "jump": {
+    "type": "noul",
+    "instructions": "¿Saltar ahora? Sí si hay hoyo o escalón a menos de 24px adelante, o si una mina o una bala baja (altura menor a 10) viene a menos de 40px, o un soldado viene a menos de 20px."
+   },
+   "crouch": {
+    "type": "noul",
+    "instructions": "¿Agacharse ahora? Sí si una bala alta (altura entre 12 y 22) viene a menos de 60px."
+   },
+   "aim": {
+    "type": "choice",
+    "instructions": "¿Hacia qué dirección apuntar para pegarle al enemigo más cercano? dy 0 = derecha o izquierda.",
+    "criteria": {
+     "E": "derecha (dx+, dy 0)",
+     "NE": "arriba-derecha (dx+, dy+)",
+     "N": "arriba (dy+)",
+     "NW": "arriba-izquierda (dx-, dy+)",
+     "W": "izquierda (dx-, dy 0)",
+     "SW": "abajo-izquierda (dx-, dy-)",
+     "S": "abajo (dy-)",
+     "SE": "abajo-derecha (dx+, dy-)"
+    }
+   },
+   "shoot": {
+    "type": "noul",
+    "instructions": "¿Hay un enemigo en la línea de tiro? Cuenta cualquier enemigo en pantalla (no balas): el arma gira en 8 direcciones."
+   },
+   "danger": {
+    "type": "score",
+    "instructions": "¿Qué tan peligrosa es la situación?",
+    "criteria": [
+     "Seguro",
+     "Alerta",
+     "Crítico"
+    ]
+   }
+  }
+ },
+ "response": {
+  "model": "jev-local-qwen3.5-4b",
+  "answers": {
+   "move": {
+    "type": "choice",
+    "choice": "avanzar",
+    "probabilities": {
+     "avanzar": 0.979634,
+     "retroceder": 0.009825,
+     "quieto": 0.010542
+    },
+    "confidence": 0.96945
+   },
+   "jump": {
+    "type": "noul",
+    "noul": 0.144586
+   },
+   "crouch": {
+    "type": "noul",
+    "noul": 0.150105
+   },
+   "aim": {
+    "type": "choice",
+    "choice": "E",
+    "probabilities": {
+     "E": 0.593575,
+     "NE": 0.062278,
+     "N": 0.035075,
+     "NW": 0.028497,
+     "W": 0.25532,
+     "SW": 0.012163,
+     "S": 0.004815,
+     "SE": 0.008277
+    },
+    "confidence": 0.535514
+   },
+   "shoot": {
+    "type": "noul",
+    "noul": 0.193138
+   },
+   "danger": {
+    "type": "score",
+    "score": 0.755978,
+    "legend": {
+     "0": "Seguro",
+     "1": "Alerta",
+     "2": "Crítico"
+    },
+    "probabilities": {
+     "0": 0.473151,
+     "1": 0.297719,
+     "2": 0.22913
+    },
+    "confidence": 0.209727
+   }
+  },
+  "usage": {
+   "input_tokens": 711,
+   "output_tokens": 6
+  }
+ },
+ "latency_ms": 412.1
+}

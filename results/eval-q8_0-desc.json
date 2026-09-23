@@ -1,0 +1,100 @@
+{
+ "config": {
+  "data": [
+   "bench-data/authored144.jsonl",
+   "bench-data/wanli256.jsonl",
+   "bench-data/every/gold154.jsonl"
+  ],
+  "gguf": "models/gguf/Qwen_Qwen3.5-4B-Q8_0.gguf",
+  "url": null,
+  "model": "jev-latest",
+  "ref": [
+   "SemIf/results/raw/predictions/direct-authored144.jsonl",
+   "SemIf/results/raw/predictions/direct-wanli256.jsonl",
+   "SemIf/results/raw/predictions/direct-every204.jsonl"
+  ],
+  "debias": "none",
+  "option_style": "desc",
+  "batch": 16,
+  "ctx": 32768,
+  "seqs": 32,
+  "out": "results/eval-q8_0-desc.json"
+ },
+ "datasets": {
+  "authored144.jsonl": {
+   "raw": {
+    "n": 144,
+    "accuracy": 0.8125,
+    "balanced_accuracy": 0.8019277886593235,
+    "nll": 0.42424705094964493,
+    "brier": 0.24350459607720584,
+    "ece": 0.04718997808217837,
+    "mean_max_prob": 0.8596899780821784
+   },
+   "seconds": 9.170283659001143,
+   "ms_per_row": 63.68252540973016,
+   "parity_vs_ref": {
+    "n": 144,
+    "argmax_agreement": 0.9791666666666666,
+    "mean_total_variation": 0.014299085220976813
+   }
+  },
+  "wanli256.jsonl": {
+   "raw": {
+    "n": 256,
+    "accuracy": 0.640625,
+    "balanced_accuracy": 0.6404012767897856,
+    "nll": 1.079094211396909,
+    "brier": 0.5519641182522889,
+    "ece": 0.2139551853548404,
+    "mean_max_prob": 0.8391411319204742
+   },
+   "seconds": 18.163877427999978,
+   "ms_per_row": 70.95264620312491,
+   "parity_vs_ref": {
+    "n": 256,
+    "argmax_agreement": 0.9765625,
+    "mean_total_variation": 0.018624448362781362
+   }
+  },
+  "gold154.jsonl": {
+   "raw": {
+    "n": 154,
+    "accuracy": 0.9415584415584416,
+    "balanced_accuracy": 0.8992740471869328,
+    "nll": 0.1976075731011463,
+    "brier": 0.10818197747903863,
+    "ece": 0.05072542179598531,
+    "mean_max_prob": 0.9794905753520169
+   },
+   "seconds": 7.943814954000118,
+   "ms_per_row": 51.58321398701375,
+   "parity_vs_ref": {
+    "n": 154,
+    "argmax_agreement": 1.0,
+    "mean_total_variation": 0.0023538626570478163
+   }
+  }
+ },
+ "pooled": {
+  "raw": {
+   "n": 554,
+   "accuracy": 0.7689530685920578,
+   "balanced_accuracy": 0.7615708475000506,
+   "nll": 0.6638470391912169,
+   "brier": 0.34842509140699557,
+   "ece": 0.12094142694706825,
+   "mean_max_prob": 0.8834964534651367
+  },
+  "fitted_temperature": 1.95,
+  "calibrated": {
+   "n": 554,
+   "accuracy": 0.7689530685920578,
+   "balanced_accuracy": 0.7615708475000506,
+   "nll": 0.5508470064457612,
+   "brier": 0.31754035868138186,
+   "ece": 0.01927208376303364,
+   "mean_max_prob": 0.7757989921379983
+  }
+ }
+}

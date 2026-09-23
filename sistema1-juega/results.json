@@ -1,0 +1,339 @@
+{
+ "table": {
+  "realtime": {
+   "n": 5,
+   "progress_mean": 24.875999999999998,
+   "progress_sd": 1.2483044500441387,
+   "progress_max": 27.32,
+   "score_mean": 1530.0,
+   "kills_mean": 11.6,
+   "deaths_mean": 3.0,
+   "cleared": 0,
+   "stalled": 0,
+   "seconds_mean": 17.352,
+   "decisions": 170,
+   "lat_mean": 408.17270588235294,
+   "lat_p50": 406.14,
+   "lat_p95": 434.66,
+   "frames_per_decision": 25.0,
+   "decisions_per_s": 1.9594283079760257,
+   "tokens_in": 725.0,
+   "pct_fallback": 32.35294117647059,
+   "pct_duda": 61.76470588235294,
+   "pct_actua": 5.882352941176471
+  },
+  "turns": {
+   "n": 2,
+   "progress_mean": 12.52,
+   "progress_sd": 0.0,
+   "progress_max": 12.52,
+   "score_mean": 350.0,
+   "kills_mean": 4.0,
+   "deaths_mean": 3.0,
+   "cleared": 0,
+   "stalled": 0,
+   "seconds_mean": 11.35,
+   "decisions": 120,
+   "lat_mean": 370.7265,
+   "lat_p50": 371.625,
+   "lat_p95": 380.67,
+   "frames_per_decision": null,
+   "decisions_per_s": null,
+   "tokens_in": 742.5,
+   "pct_fallback": 50.0,
+   "pct_duda": 45.0,
+   "pct_actua": 5.0
+  },
+  "system2_realtime": {
+   "n": 3,
+   "progress_mean": 10.28,
+   "progress_sd": 0.0,
+   "progress_max": 10.28,
+   "score_mean": 66.66666666666667,
+   "kills_mean": 0.6666666666666666,
+   "deaths_mean": 3.0,
+   "cleared": 0,
+   "stalled": 0,
+   "seconds_mean": 10.733333333333334,
+   "decisions": 24,
+   "lat_mean": 1040.5079166666667,
+   "lat_p50": 1070.525,
+   "lat_p95": 1091.52,
+   "frames_per_decision": 65.0,
+   "decisions_per_s": 0.7453416149068323,
+   "tokens_in": 547.0,
+   "pct_fallback": 0.0,
+   "pct_duda": 0.0,
+   "pct_actua": 100.0,
+   "parse_errors": 0,
+   "pct_parse_errors": 0.0,
+   "output_tokens_mean": 29.0
+  },
+  "system2_turns": {
+   "n": 1,
+   "progress_mean": 10.28,
+   "progress_sd": 0.0,
+   "progress_max": 10.28,
+   "score_mean": 1000.0,
+   "kills_mean": 8.0,
+   "deaths_mean": 1.0,
+   "cleared": 0,
+   "stalled": 1,
+   "seconds_mean": 51.2,
+   "decisions": 376,
+   "lat_mean": 1112.3760638297872,
+   "lat_p50": 1100.9850000000001,
+   "lat_p95": 1481.77,
+   "frames_per_decision": null,
+   "decisions_per_s": null,
+   "tokens_in": 623.0,
+   "pct_fallback": 0.0,
+   "pct_duda": 0.0,
+   "pct_actua": 100.0,
+   "parse_errors": 0,
+   "pct_parse_errors": 0.0,
+   "output_tokens_mean": 31.632978723404257
+  },
+  "random": {
+   "n": 5,
+   "progress_mean": 4.638,
+   "progress_sd": 1.950809062927482,
+   "progress_max": 6.75,
+   "score_mean": 260.0,
+   "kills_mean": 2.6,
+   "deaths_mean": 2.4,
+   "cleared": 0,
+   "stalled": 1,
+   "seconds_mean": 54.548,
+   "decisions": 2049
+  }
+ },
+ "accuracy": {
+  "realtime": {
+   "shoot": {
+    "acc": 0.9705882352941176,
+    "positives": 105,
+    "recall": 0.9523809523809523,
+    "precision": 1.0
+   },
+   "jump": {
+    "acc": 0.6764705882352942,
+    "positives": 20,
+    "recall": 0.5,
+    "precision": 0.18181818181818182
+   },
+   "crouch": {
+    "acc": 0.711764705882353,
+    "positives": 26,
+    "recall": 0.23076923076923078,
+    "precision": 0.17142857142857143
+   },
+   "aim": {
+    "acc_when_aligned": 0.8641975308641975,
+    "n": 81
+   }
+  },
+  "turns": {
+   "shoot": {
+    "acc": 0.8833333333333333,
+    "positives": 76,
+    "recall": 0.8157894736842105,
+    "precision": 1.0
+   },
+   "jump": {
+    "acc": 0.43333333333333335,
+    "positives": 2,
+    "recall": 1.0,
+    "precision": 0.02857142857142857
+   },
+   "crouch": {
+    "acc": 0.7666666666666667,
+    "positives": 2,
+    "recall": 0.0,
+    "precision": 0.0
+   },
+   "aim": {
+    "acc_when_aligned": 0.4444444444444444,
+    "n": 54
+   }
+  }
+ },
+ "calibration": {
+  "shoot": {
+   "n": 290,
+   "ece_server": 0.24164702413793107,
+   "ece_game": 0.16611241553780534,
+   "positives": 181
+  },
+  "jump": {
+   "n": 290,
+   "ece_server": 0.33596775862068967,
+   "ece_game": 0.319828890151693,
+   "positives": 22
+  }
+ },
+ "calibration_fit": {
+  "n": 348,
+  "factor": 1.55,
+  "T_game": 1.161,
+  "nll_server": 0.5076,
+  "nll_game": 0.4878,
+  "ece_server": 0.2005,
+  "ece_game": 0.1856
+ },
+ "variants": {
+  "best": "D",
+  "factor": 1.55,
+  "variants": {
+   "A": {
+    "runs": [
+     {
+      "progress": 0.0,
+      "score": 0,
+      "stalled": true,
+      "rtt_ms": 328.06,
+      "tokens": 543
+     },
+     {
+      "progress": 0.0,
+      "score": 0,
+      "stalled": true,
+      "rtt_ms": 328.26,
+      "tokens": 543
+     },
+     {
+      "progress": 0.0,
+      "score": 0,
+      "stalled": true,
+      "rtt_ms": 326.87,
+      "tokens": 543
+     }
+    ],
+    "mean_progress": 0.0
+   },
+   "B": {
+    "runs": [
+     {
+      "progress": 15.6,
+      "score": 1000,
+      "stalled": false,
+      "rtt_ms": 408.13,
+      "tokens": 734.5
+     },
+     {
+      "progress": 15.6,
+      "score": 1000,
+      "stalled": false,
+      "rtt_ms": 407.755,
+      "tokens": 734.5
+     },
+     {
+      "progress": 15.6,
+      "score": 1000,
+      "stalled": false,
+      "rtt_ms": 406.925,
+      "tokens": 734.5
+     }
+    ],
+    "mean_progress": 15.6
+   },
+   "C": {
+    "runs": [
+     {
+      "progress": 14.69,
+      "score": 500,
+      "stalled": false,
+      "rtt_ms": 380.73,
+      "tokens": 681
+     },
+     {
+      "progress": 14.69,
+      "score": 500,
+      "stalled": false,
+      "rtt_ms": 381.16,
+      "tokens": 681
+     },
+     {
+      "progress": 14.69,
+      "score": 500,
+      "stalled": false,
+      "rtt_ms": 381.19,
+      "tokens": 681
+     }
+    ],
+    "mean_progress": 14.69
+   },
+   "D": {
+    "runs": [
+     {
+      "progress": 23.98,
+      "score": 1650,
+      "stalled": false,
+      "rtt_ms": 404.77,
+      "tokens": 722
+     },
+     {
+      "progress": 27.32,
+      "score": 1650,
+      "stalled": false,
+      "rtt_ms": 406.85,
+      "tokens": 735.5
+     },
+     {
+      "progress": 27.32,
+      "score": 1650,
+      "stalled": false,
+      "rtt_ms": 407.41,
+      "tokens": 733
+     }
+    ],
+    "mean_progress": 26.206666666666667
+   }
+  }
+ },
+ "concurrency": {
+  "inflight_1": {
+   "decisions": 38,
+   "seconds": 19.12,
+   "decisions_per_s": 1.9874476987447698,
+   "lat_mean_ms": 409.7542105263158,
+   "lat_p95_ms": 436.4,
+   "frames_per_decision": 25.0
+  },
+  "inflight_2": {
+   "decisions": 55,
+   "seconds": 22.67,
+   "decisions_per_s": 2.4261138067931185,
+   "lat_mean_ms": 722.3981818181818,
+   "lat_p95_ms": 782.66,
+   "frames_per_decision": 44
+  }
+ },
+ "state_tokens": {
+  "D": {
+   "n": 398,
+   "median": 81.0,
+   "p95": 124,
+   "max": 137
+  },
+  "B": {
+   "n": 472,
+   "median": 150.0,
+   "p95": 155,
+   "max": 157
+  },
+  "A": {
+   "n": 405,
+   "median": 59,
+   "p95": 59,
+   "max": 59
+  },
+  "C": {
+   "n": 69,
+   "median": 69,
+   "p95": 94,
+   "max": 94
+  }
+ },
+ "human_pending": true
+}

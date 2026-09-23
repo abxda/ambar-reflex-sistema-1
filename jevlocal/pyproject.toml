@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jevlocal"
+version = "1.0.0"
+description = "Self-hosted System One decisions (Choice/Score/Noul) with a TypeSafe Jev-compatible API"
+requires-python = ">=3.10"
+dependencies = ["llama-cpp-python==0.3.35"]
+
+[project.scripts]
+jevlocal = "jevlocal.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

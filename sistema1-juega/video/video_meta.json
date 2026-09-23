@@ -1,0 +1,14 @@
+{
+ "run": "rt-D-1987-2",
+ "moments": {
+  "high_conf": 124,
+  "doubt": 324,
+  "kill": 136,
+  "death": 315,
+  "boss": null,
+  "jump": 199,
+  "frames": 1147,
+  "hi_conf_value": 0.9477,
+  "doubt_tag": "FALLBACK"
+ }
+}

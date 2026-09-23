@@ -1,0 +1,110 @@
+{
+ "best": "D",
+ "factor": 1.55,
+ "variants": {
+  "A": {
+   "runs": [
+    {
+     "progress": 0.0,
+     "score": 0,
+     "stalled": true,
+     "rtt_ms": 328.06,
+     "tokens": 543
+    },
+    {
+     "progress": 0.0,
+     "score": 0,
+     "stalled": true,
+     "rtt_ms": 328.26,
+     "tokens": 543
+    },
+    {
+     "progress": 0.0,
+     "score": 0,
+     "stalled": true,
+     "rtt_ms": 326.87,
+     "tokens": 543
+    }
+   ],
+   "mean_progress": 0.0
+  },
+  "B": {
+   "runs": [
+    {
+     "progress": 15.6,
+     "score": 1000,
+     "stalled": false,
+     "rtt_ms": 408.13,
+     "tokens": 734.5
+    },
+    {
+     "progress": 15.6,
+     "score": 1000,
+     "stalled": false,
+     "rtt_ms": 407.755,
+     "tokens": 734.5
+    },
+    {
+     "progress": 15.6,
+     "score": 1000,
+     "stalled": false,
+     "rtt_ms": 406.925,
+     "tokens": 734.5
+    }
+   ],
+   "mean_progress": 15.6
+  },
+  "C": {
+   "runs": [
+    {
+     "progress": 14.69,
+     "score": 500,
+     "stalled": false,
+     "rtt_ms": 380.73,
+     "tokens": 681
+    },
+    {
+     "progress": 14.69,
+     "score": 500,
+     "stalled": false,
+     "rtt_ms": 381.16,
+     "tokens": 681
+    },
+    {
+     "progress": 14.69,
+     "score": 500,
+     "stalled": false,
+     "rtt_ms": 381.19,
+     "tokens": 681
+    }
+   ],
+   "mean_progress": 14.69
+  },
+  "D": {
+   "runs": [
+    {
+     "progress": 23.98,
+     "score": 1650,
+     "stalled": false,
+     "rtt_ms": 404.77,
+     "tokens": 722
+    },
+    {
+     "progress": 27.32,
+     "score": 1650,
+     "stalled": false,
+     "rtt_ms": 406.85,
+     "tokens": 735.5
+    },
+    {
+     "progress": 27.32,
+     "score": 1650,
+     "stalled": false,
+     "rtt_ms": 407.41,
+     "tokens": 733
+    }
+   ],
+   "mean_progress": 26.206666666666667
+  }
+ }
+}

@@ -1,0 +1,54 @@
+{
+ "config": {
+  "data": [
+   "bench-data/every/gold154.jsonl"
+  ],
+  "gguf": "models/gguf/Qwen_Qwen3.5-4B-Q8_0.gguf",
+  "url": null,
+  "model": "jev-latest",
+  "ref": [],
+  "debias": "noul",
+  "option_style": "desc",
+  "batch": 16,
+  "ctx": 32768,
+  "seqs": 32,
+  "as_noul": true,
+  "out": "results/eval-q8_0-every-noul-noul.json"
+ },
+ "datasets": {
+  "gold154.jsonl": {
+   "raw": {
+    "n": 154,
+    "accuracy": 0.9285714285714286,
+    "balanced_accuracy": 0.8729582577132486,
+    "nll": 0.19607790566799946,
+    "brier": 0.11370618053719558,
+    "ece": 0.04784663759110838,
+    "mean_max_prob": 0.969351802806585
+   },
+   "seconds": 11.83379122200131,
+   "ms_per_row": 76.84280014286564
+  }
+ },
+ "pooled": {
+  "raw": {
+   "n": 154,
+   "accuracy": 0.9285714285714286,
+   "balanced_accuracy": 0.8729582577132486,
+   "nll": 0.19607790566799946,
+   "brier": 0.11370618053719558,
+   "ece": 0.04784663759110838,
+   "mean_max_prob": 0.969351802806585
+  },
+  "fitted_temperature": 1.6,
+  "calibrated": {
+   "n": 154,
+   "accuracy": 0.9285714285714286,
+   "balanced_accuracy": 0.8729582577132486,
+   "nll": 0.16972356810887834,
+   "brier": 0.10486266890844848,
+   "ece": 0.03311489932710638,
+   "mean_max_prob": 0.9392909402878518
+  }
+ }
+}

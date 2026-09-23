@@ -1,0 +1,83 @@
+{
+ "config": {
+  "data": [
+   "bench-data/authored144.jsonl",
+   "bench-data/wanli256.jsonl",
+   "bench-data/every/gold154.jsonl"
+  ],
+  "gguf": "models/gguf/Qwen_Qwen3.5-4B-Q8_0.gguf",
+  "url": null,
+  "model": "jev-latest",
+  "ref": [],
+  "debias": "all",
+  "option_style": "key",
+  "profile": "semif",
+  "batch": 16,
+  "ctx": 32768,
+  "seqs": 32,
+  "as_noul": false,
+  "out": "results/eval-q8_0-semif-all.json"
+ },
+ "datasets": {
+  "authored144.jsonl": {
+   "raw": {
+    "n": 144,
+    "accuracy": 0.8472222222222222,
+    "balanced_accuracy": 0.8375971441208062,
+    "nll": 0.33522481200539866,
+    "brier": 0.18417592968385743,
+    "ece": 0.09562908329515331,
+    "mean_max_prob": 0.8286360992718188
+   },
+   "seconds": 16.582537053000124,
+   "ms_per_row": 115.15650731250086
+  },
+  "wanli256.jsonl": {
+   "raw": {
+    "n": 256,
+    "accuracy": 0.65625,
+    "balanced_accuracy": 0.6558139534883721,
+    "nll": 0.8332019915118634,
+    "brier": 0.4694954989339894,
+    "ece": 0.1364369422477469,
+    "mean_max_prob": 0.7907552243708105
+   },
+   "seconds": 28.892639937999775,
+   "ms_per_row": 112.86187475781162
+  },
+  "gold154.jsonl": {
+   "raw": {
+    "n": 154,
+    "accuracy": 0.9285714285714286,
+    "balanced_accuracy": 0.8729582577132486,
+    "nll": 0.18050847488240657,
+    "brier": 0.11248190847562434,
+    "ece": 0.047192323296847846,
+    "mean_max_prob": 0.9532558969201225
+   },
+   "seconds": 12.653904598999361,
+   "ms_per_row": 82.16821168181403
+  }
+ },
+ "pooled": {
+  "raw": {
+   "n": 554,
+   "accuracy": 0.7815884476534296,
+   "balanced_accuracy": 0.7708900988256884,
+   "nll": 0.522329220013908,
+   "brier": 0.2960909666188139,
+   "ece": 0.06576800304892208,
+   "mean_max_prob": 0.8457731838623975
+  },
+  "fitted_temperature": 1.35,
+  "calibrated": {
+   "n": 554,
+   "accuracy": 0.7815884476534296,
+   "balanced_accuracy": 0.7708900988256884,
+   "nll": 0.5025490642028375,
+   "brier": 0.2901380278367785,
+   "ece": 0.015394851087061422,
+   "mean_max_prob": 0.796528740427142
+  }
+ }
+}

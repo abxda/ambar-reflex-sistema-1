@@ -1,0 +1,18 @@
+# systemd user service. Install:
+#   mkdir -p ~/.config/systemd/user && cp jevlocal.service ~/.config/systemd/user/
+#   edit JEVLOCAL_HOME below, then: systemctl --user daemon-reload && systemctl --user enable --now jevlocal
+[Unit]
+Description=jevlocal - local Jev-compatible System One API
+After=network-online.target
+
+[Service]
+Environment=JEVLOCAL_HOME=%h/jevlocal-1.0.0-linux-x86_64-cuda12
+Environment=JEVLOCAL_HOST=127.0.0.1
+Environment=JEVLOCAL_PORT=8765
+# Environment=JEVLOCAL_API_KEY=change-me
+ExecStart=/bin/bash -c 'exec "$JEVLOCAL_HOME/bin/jevlocal" serve'
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

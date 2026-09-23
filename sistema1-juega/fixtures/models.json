@@ -1,0 +1,14 @@
+{
+ "models": [
+  {
+   "name": "jev-local-qwen3.5-4b",
+   "description": "Local System One model (jev-local-qwen3.5-4b, Qwen_Qwen3.5-4B-Q8_0.gguf)",
+   "release_date": "2026-09-22"
+  },
+  {
+   "name": "jev-latest",
+   "description": "Local System One model (jev-local-qwen3.5-4b, Qwen_Qwen3.5-4B-Q8_0.gguf)",
+   "release_date": "2026-09-22"
+  }
+ ]
+}

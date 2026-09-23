@@ -1,0 +1,18 @@
+{
+ "inflight_1": {
+  "decisions": 38,
+  "seconds": 19.12,
+  "decisions_per_s": 1.9874476987447698,
+  "lat_mean_ms": 409.7542105263158,
+  "lat_p95_ms": 436.4,
+  "frames_per_decision": 25.0
+ },
+ "inflight_2": {
+  "decisions": 55,
+  "seconds": 22.67,
+  "decisions_per_s": 2.4261138067931185,
+  "lat_mean_ms": 722.3981818181818,
+  "lat_p95_ms": 782.66,
+  "frames_per_decision": 44
+ }
+}

@@ -1,0 +1,83 @@
+{
+ "config": {
+  "data": [
+   "bench-data/authored144.jsonl",
+   "bench-data/wanli256.jsonl",
+   "bench-data/every/gold154.jsonl"
+  ],
+  "gguf": "models/gguf/Qwen_Qwen3.5-4B-Q8_0.gguf",
+  "url": null,
+  "model": "jev-latest",
+  "ref": [],
+  "debias": "none",
+  "option_style": "key",
+  "profile": "reflex",
+  "batch": 16,
+  "ctx": 32768,
+  "seqs": 32,
+  "as_noul": false,
+  "out": "results/eval-q8_0-reflex-none.json"
+ },
+ "datasets": {
+  "authored144.jsonl": {
+   "raw": {
+    "n": 144,
+    "accuracy": 0.8819444444444444,
+    "balanced_accuracy": 0.8716061863341827,
+    "nll": 0.3263883910423111,
+    "brier": 0.1708763829456451,
+    "ece": 0.05381387824151776,
+    "mean_max_prob": 0.8528596995308706
+   },
+   "seconds": 7.248190064998198,
+   "ms_per_row": 50.334653229154156
+  },
+  "wanli256.jsonl": {
+   "raw": {
+    "n": 256,
+    "accuracy": 0.609375,
+    "balanced_accuracy": 0.6088919288645691,
+    "nll": 0.9789120278392446,
+    "brier": 0.5315299668540686,
+    "ece": 0.14545893721463823,
+    "mean_max_prob": 0.7548339372146382
+   },
+   "seconds": 14.995446376000473,
+   "ms_per_row": 58.57596240625185
+  },
+  "gold154.jsonl": {
+   "raw": {
+    "n": 154,
+    "accuracy": 0.922077922077922,
+    "balanced_accuracy": 0.9305807622504537,
+    "nll": 0.22245658010528324,
+    "brier": 0.12058915757185663,
+    "ece": 0.07688503798568938,
+    "mean_max_prob": 0.8596311362996023
+   },
+   "seconds": 7.291719333999936,
+   "ms_per_row": 47.348826844155425
+  }
+ },
+ "pooled": {
+  "raw": {
+   "n": 554,
+   "accuracy": 0.7671480144404332,
+   "balanced_accuracy": 0.8064599420451791,
+   "nll": 0.5990247667385433,
+   "brier": 0.32355343127234726,
+   "ece": 0.042296894674244655,
+   "mean_max_prob": 0.8094449091146778
+  },
+  "fitted_temperature": 1.35,
+  "calibrated": {
+   "n": 554,
+   "accuracy": 0.7671480144404332,
+   "balanced_accuracy": 0.8064599420451791,
+   "nll": 0.5803360380250661,
+   "brier": 0.32313916652875385,
+   "ece": 0.04421975389643012,
+   "mean_max_prob": 0.7525097158802648
+  }
+ }
+}

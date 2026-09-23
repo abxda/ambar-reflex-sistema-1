@@ -1,0 +1,9 @@
+{
+ "n": 348,
+ "factor": 1.55,
+ "T_game": 1.161,
+ "nll_server": 0.5076,
+ "nll_game": 0.4878,
+ "ece_server": 0.2005,
+ "ece_game": 0.1856
+}

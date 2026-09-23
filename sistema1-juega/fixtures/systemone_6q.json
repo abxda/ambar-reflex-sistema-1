@@ -1,0 +1,114 @@
+{
+ "request": {
+  "state": "Soldado agachado, arma N, vidas 3, avance 55%. Terreno: plano. Amenazas (dx,dy px; dx+ adelante, dy+ arriba): bala +46,+8 viene; torreta +96,+8.",
+  "model": "jev-latest",
+  "questions": {
+   "move": {
+    "type": "choice",
+    "instructions": "¿Moverse ahora?",
+    "criteria": {
+     "avanzar": "ir adelante (dx+)",
+     "retroceder": "ir atrás, huir de algo cercano",
+     "quieto": "no moverse"
+    }
+   },
+   "jump": {
+    "type": "noul",
+    "instructions": "¿Saltar ahora? Sí si hay hoyo o escalón a menos de 20px adelante, o mina o bala baja (dy < 10) que viene a menos de 40px."
+   },
+   "crouch": {
+    "type": "noul",
+    "instructions": "¿Agacharse ahora? Sí si una bala alta (dy entre 12 y 22) viene a menos de 60px."
+   },
+   "aim": {
+    "type": "choice",
+    "instructions": "¿Hacia qué dirección apuntar para pegarle a la amenaza más cercana?",
+    "criteria": {
+     "E": "derecha (dx+, dy 0)",
+     "NE": "arriba-derecha (dx+, dy+)",
+     "N": "arriba (dy+)",
+     "NW": "arriba-izquierda (dx-, dy+)",
+     "W": "izquierda (dx-, dy 0)",
+     "SW": "abajo-izquierda (dx-, dy-)",
+     "S": "abajo (dy-)",
+     "SE": "abajo-derecha (dx+, dy-)"
+    }
+   },
+   "shoot": {
+    "type": "noul",
+    "instructions": "¿Hay algún enemigo alineado con alguna de las 8 direcciones de tiro?"
+   },
+   "danger": {
+    "type": "score",
+    "instructions": "¿Qué tan peligrosa es la situación?",
+    "criteria": [
+     "Seguro",
+     "Alerta",
+     "Crítico"
+    ]
+   }
+  }
+ },
+ "response": {
+  "model": "jev-local-qwen3.5-4b",
+  "answers": {
+   "move": {
+    "type": "choice",
+    "choice": "quieto",
+    "probabilities": {
+     "avanzar": 0.314323,
+     "retroceder": 0.23542,
+     "quieto": 0.450257
+    },
+    "confidence": 0.175385
+   },
+   "jump": {
+    "type": "noul",
+    "noul": 0.473625
+   },
+   "crouch": {
+    "type": "noul",
+    "noul": 0.343286
+   },
+   "aim": {
+    "type": "choice",
+    "choice": "NE",
+    "probabilities": {
+     "E": 0.114023,
+     "NE": 0.570671,
+     "N": 0.236083,
+     "NW": 0.04185,
+     "W": 0.021271,
+     "SW": 0.004684,
+     "S": 0.004459,
+     "SE": 0.006959
+    },
+    "confidence": 0.509338
+   },
+   "shoot": {
+    "type": "noul",
+    "noul": 0.583072
+   },
+   "danger": {
+    "type": "score",
+    "score": 1.535386,
+    "legend": {
+     "0": "Seguro",
+     "1": "Alerta",
+     "2": "Crítico"
+    },
+    "probabilities": {
+     "0": 0.134609,
+     "1": 0.195397,
+     "2": 0.669994
+    },
+    "confidence": 0.504991
+   }
+  },
+  "usage": {
+   "input_tokens": 642,
+   "output_tokens": 6
+  }
+ },
+ "latency_ms": 336.0
+}

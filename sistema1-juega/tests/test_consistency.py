@@ -1,0 +1,30 @@
+"""Every figure quoted in social.md and in the video outro must exist in results.md;
+latencies in results.json must be recomputable from the JSONL logs."""
+
+import json
+import re
+import statistics as st
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+NUM = re.compile(r"(?<![\w.])\d+(?:[.,]\d+)?(?=\s?(?:%|ms|frames|tokens))")
+
+
+def test_social_numbers_come_from_results():
+    results = (ROOT / "results.md").read_text()
+    social = (ROOT / "social.md").read_text()
+    missing = [n for n in set(NUM.findall(social)) if n not in results]
+    assert not missing, f"numbers in social.md not found in results.md: {missing}"
+
+
+def test_latency_recomputes_from_logs():
+    R = json.loads((ROOT / "results.json").read_text())
+    lat = [json.loads(l)["rtt_ms"] for p in sorted((ROOT / "runs" / "bench" / "realtime").glob("*.jsonl"))
+           for l in open(p) if json.loads(l).get("rtt_ms")]
+    assert abs(st.fmean(lat) - R["table"]["realtime"]["lat_mean"]) < 1e-6
+
+
+def test_signatures():
+    social = (ROOT / "social.md").read_text()
+    assert social.count("— @abxda") >= 6
+    assert "el formato está garantizado; la corrección no" in social.lower()

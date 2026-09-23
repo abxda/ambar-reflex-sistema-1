@@ -1,0 +1,20 @@
+# Whitelist: only the project, never models, builds, venvs or third-party clones/data
+/*
+!/.gitignore
+!/README.md
+!/JEV_LOCAL_REPORTE.md
+!/REGENERAR_VIDEOS.md
+!/ARQUITECTURA_GRAFICA.md
+!/jevlocal/
+!/sistema1-juega/
+!/results/
+**/.venv/
+**/__pycache__/
+**/*.pyc
+**/*.egg-info/
+**/.pytest_cache/
+sistema1-juega/preview/
+sistema1-juega/runs/_obsolete/
+sistema1-juega/runs/.server.pid
+sistema1-juega/runs/server.log
+jevlocal/build/

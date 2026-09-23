@@ -1,0 +1,83 @@
+{
+ "config": {
+  "data": [
+   "bench-data/authored144.jsonl",
+   "bench-data/wanli256.jsonl",
+   "bench-data/every/gold154.jsonl"
+  ],
+  "gguf": "models/gguf/Qwen_Qwen3.5-4B-Q8_0.gguf",
+  "url": null,
+  "model": "jev-latest",
+  "ref": [],
+  "debias": "none",
+  "option_style": "key",
+  "profile": "semif",
+  "batch": 16,
+  "ctx": 32768,
+  "seqs": 32,
+  "as_noul": false,
+  "out": "results/eval-q8_0-semif-none.json"
+ },
+ "datasets": {
+  "authored144.jsonl": {
+   "raw": {
+    "n": 144,
+    "accuracy": 0.8194444444444444,
+    "balanced_accuracy": 0.8059336015107796,
+    "nll": 0.4905243399076837,
+    "brier": 0.2640202820417723,
+    "ece": 0.09419322157618543,
+    "mean_max_prob": 0.8653554191194675
+   },
+   "seconds": 8.218349251998006,
+   "ms_per_row": 57.07186980554171
+  },
+  "wanli256.jsonl": {
+   "raw": {
+    "n": 256,
+    "accuracy": 0.671875,
+    "balanced_accuracy": 0.6714546283629731,
+    "nll": 0.9990323943506751,
+    "brier": 0.4980136046049554,
+    "ece": 0.12934619635615724,
+    "mean_max_prob": 0.7973235098964633
+   },
+   "seconds": 16.44942776699827,
+   "ms_per_row": 64.25557721483699
+  },
+  "gold154.jsonl": {
+   "raw": {
+    "n": 154,
+    "accuracy": 0.9415584415584416,
+    "balanced_accuracy": 0.8992740471869328,
+    "nll": 0.18258321771972402,
+    "brier": 0.10631024197996329,
+    "ece": 0.04824137309928255,
+    "mean_max_prob": 0.974417271787042
+   },
+   "seconds": 7.546356229999219,
+   "ms_per_row": 49.00231318181311
+  }
+ },
+ "pooled": {
+  "raw": {
+   "n": 554,
+   "accuracy": 0.7851985559566786,
+   "balanced_accuracy": 0.754398169582471,
+   "nll": 0.6399018292947957,
+   "brier": 0.3283071853028847,
+   "ece": 0.08984307616011189,
+   "mean_max_prob": 0.8642351240828563
+  },
+  "fitted_temperature": 1.8,
+  "calibrated": {
+   "n": 554,
+   "accuracy": 0.7851985559566786,
+   "balanced_accuracy": 0.754398169582471,
+   "nll": 0.5551501480438573,
+   "brier": 0.3148709857011496,
+   "ece": 0.02373621732066662,
+   "mean_max_prob": 0.7705370182374054
+  }
+ }
+}
