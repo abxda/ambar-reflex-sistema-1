@@ -77,6 +77,9 @@ bench/server.sh stop && make system2      # opcional: Sistema 2 con Ollama qwen3
 > Nos pasó (NVRM Xid 56). El proyecto trae defaults seguros y un watchdog (`sistema1-juega/bench/gpu_guard.py`)
 > que aborta ante errores Xid, más de 80 °C o poca VRAM libre. Corre una partida a la vez.
 
+## Licencia
+[MIT](LICENSE) © 2026 abxda. Los pesos del modelo (no incluidos) conservan su propia licencia (Apache-2.0).
+
 ## Créditos
 - **Método de lectura de logits:** [SemIf](https://github.com/TheoLeeCJ/SemIf) (MIT). **Perfil de prompt
   markdown:** [reflex](https://github.com/kshetrajna12/reflex) (MIT).
