@@ -67,7 +67,7 @@ Todo el código es abierto: https://github.com/abxda/ambar-reflex-sistema-1
 
 1/ Jev (TypeSafe AI) es un modelo «Sistema 1»: no escribe, decide. Le das un estado y preguntas cerradas,
 y te devuelve probabilidades. Armé un clon local con la misma API (POST /v1/systemone): Qwen3.5-4B
-cuantizado a 8 bits sobre llama.cpp, en una RTX 3060. — Dr. Coronado (@abxda)
+a 8 bits sobre llama.cpp, en una RTX 3060. — Dr. Coronado (@abxda)
 
 2/ Por dentro: no genera tokens. Lee la probabilidad del siguiente token restringida a las letras de las
 opciones. El estado se procesa una vez y las 6 preguntas salen como ramas de esa misma pasada.
