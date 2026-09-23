@@ -36,8 +36,22 @@ def _act(a: Action) -> dict:
     return asdict(a)
 
 
+def server_info() -> dict:
+    """/health of the System One server (which model played), or {} for offline baselines."""
+    import os
+    import urllib.request
+
+    try:
+        url = os.environ.get("JEV_BASE_URL", "http://127.0.0.1:8765").rstrip("/") + "/health"
+        return json.load(urllib.request.urlopen(url, timeout=3))
+    except Exception:  # noqa: BLE001
+        return {}
+
+
 def _finish(world: World, meta: dict, decisions: list, timeline: list, out: Path) -> dict:
     meta.setdefault("policy", POLICY)
+    if meta.get("mode") in ("realtime", "turns"):
+        meta.setdefault("server", server_info())
     meta.update(frames=world.frame, timeline=timeline, events=world.events, result={
         "progress": round(world.progress(), 2), "score": world.score, "lives": max(0, world.lives),
         "kills": world.kills, "deaths": world.hits_taken, "cleared": world.cleared, "stalled": world.stalled,

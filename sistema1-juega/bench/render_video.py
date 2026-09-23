@@ -33,6 +33,15 @@ LAYOUTS = {
 _card_backdrops = {}
 
 
+def model_label(meta: dict) -> str:
+    """Which System One model played this run (from the server /health stored in the meta)."""
+    g = (meta.get("server") or {}).get("gguf", "Qwen_Qwen3.5-4B-Q8_0.gguf")
+    if "gemma-4-E4B" in g:
+        return "GEMMA 4 E4B " + g.rsplit("-", 1)[-1].replace(".gguf", "")
+    size = "9B" if "9B" in g else "4B"
+    return f"QWEN3.5-{size} " + g.rsplit("-", 1)[-1].replace(".gguf", "")
+
+
 def card(canvas: pygame.Surface, lines: list, t: float) -> None:
     W, H = canvas.get_size()
     if (W, H) not in _card_backdrops:
@@ -72,6 +81,10 @@ def compose(canvas, layout, world, view, frame, game_surf):
         for yy in (g.top-12, g.bottom+8):
             pygame.draw.rect(canvas, (169, 149, 105), (xx, yy, 4, 4))
     font.draw(canvas, GAME_NAME, g.x, g.y-34, BRIGHT, 3)
+    tag = f" JUEGA: {view.model} "
+    tw = font.width(tag, 3)
+    canvas.fill(AMBER, (g.right - tw - 2, g.y - 42, tw + 4, 34))
+    font.draw(canvas, tag, g.right - tw, g.y - 36, BG, 3)
     draw_world(game_surf, world)
     big = upscale(game_surf, 4, crt=True)
     canvas.blit(big, L["game"].topleft)
@@ -151,12 +164,12 @@ def render(run: Path, out: Path, layout: str = "landscape", segments: list | Non
     writer = Writer(out, L["size"], tmp / "audio.wav")
     subtitle = "JUGADO EN TIEMPO REAL POR SISTEMA 1" if meta["mode"] == "realtime" else "JUGADO POR SISTEMA 1 (POR TURNOS)"
     title = [(GAME_NAME, 7, BRIGHT), ("", 2, BG), (subtitle, 3, AMBER),
-             ("QWEN3.5-4B LOCAL · DECISIONES TIPADAS · 0 TOKENS GENERADOS", 2, DIM), ("", 2, BG), ("@abxda", 3, AMBER)]
+             (f"{model_label(meta)} LOCAL · DECISIONES TIPADAS · 0 TOKENS GENERADOS", 2, DIM), ("", 2, BG), ("@abxda", 3, AMBER)]
     for i in range(int(title_s * FPS)):
         card(canvas, title, i / FPS)
         writer.write(canvas)
     for a, b, speed, caption in clips:
-        view = RunView(decisions, "jev-local")
+        view = RunView(decisions, model_label(meta))
 
         def on_frame(world, applied, current):
             f = world.frame

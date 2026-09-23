@@ -86,7 +86,9 @@ def draw_panel(s: pygame.Surface, rect: pygame.Rect, view: RunView, world, frame
     x, y = x0 + pad, y0 + pad
     font.draw(s, "SISTEMA 1 JUEGA", x, y, BRIGHT, 4)
     y += 44
-    font.draw(s, f"MODELO {view.model}  ·  QWEN3.5-4B Q8 LOCAL", x, y, DIM, 2)
+    badge = f" MODELO: {view.model} · SIN PENSAMIENTO "
+    s.fill(AMBER, (x - 2, y - 3, font.width(badge, 2) + 4, 24))
+    font.draw(s, badge, x, y, BG, 2)
     y += 24
     font.draw(s, "0 TOKENS GENERADOS  ·  1 PETICIÓN = 6 PREGUNTAS", x, y, AMBER, 2)
     y += 34
@@ -252,7 +254,11 @@ def draw_json_stream(s: pygame.Surface, rect: pygame.Rect, view: RunView, frame:
     sc = 2 if rect.width >= 600 else 1
     lh = 10 * sc
     font.draw(s, "FLUJO /v1/systemone", rect.x, rect.y, BRIGHT, sc)
-    font.draw(s, "JSON REAL · PETICIÓN → RESPUESTA", rect.x + font.width("FLUJO /v1/systemone  ", sc), rect.y, DIM, sc)
+    sub_x = rect.x + font.width("FLUJO /v1/systemone  ", sc)
+    if sub_x + font.width("JSON REAL · PETICIÓN → RESPUESTA", sc) <= rect.right:
+        font.draw(s, "JSON REAL · PETICIÓN → RESPUESTA", sub_x, rect.y, DIM, sc)
+    elif sub_x + font.width("JSON REAL", sc) <= rect.right:
+        font.draw(s, "JSON REAL", sub_x, rect.y, DIM, sc)
     box = pygame.Rect(rect.x, rect.y + lh + 6, rect.width, rect.height - lh - 6)
     if box.height < lh * 2:
         return

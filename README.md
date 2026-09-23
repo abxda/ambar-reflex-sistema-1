@@ -23,6 +23,26 @@ Autoría: **@abxda**.
 «El formato está garantizado; la corrección no.» Detalle en
 [`sistema1-juega/results.md`](sistema1-juega/results.md). Videos en `sistema1-juega/video/`.
 
+## ¿Quién decide mejor? Tres modelos, la misma partida
+
+El juego también sirve como **benchmark en video para contrastar modelos**. Tres modelos abiertos, sin
+pensamiento, juegan la misma partida con las mismas preguntas y el mismo servidor compatible con Jev
+([`sistema1-juega/results_modelos.md`](sistema1-juega/results_modelos.md)):
+
+| Modelo | Exactitud en 554 decisiones (sin presión de tiempo) | Avance en tiempo real | Latencia por decisión |
+|---|--:|--:|--:|
+| Qwen3.5-4B (Q8_0) | 77.8 % | **24.9 %** | 408 ms |
+| Gemma 4 E4B (Q6_K) | 81.6 % | 14.4 % | **312 ms** |
+| Qwen3.5-9B (Q5_K_M) | **82.7 %** | 17.5 % | 591 ms |
+
+El más listo sin presión de tiempo (9B) no es el que llega más lejos jugando (4B). En tiempo real pesan
+la velocidad, la puntería y los sesgos por pregunta; Gemma, por ejemplo, salta en el 74 % de
+las decisiones. Salvedad: las preguntas se afinaron con el 4B, que juega de local.
+
+Videos: `sistema1-juega/video/comparacion_modelos_vertical_1080x1920.mp4` (en pila) y
+`comparacion_modelos_horizontal_1920x1080.mp4` (lado a lado). Si un modelo muere, su pantalla queda
+congelada en «GAME OVER» mientras los demás siguen.
+
 ## Contenido
 
 | Carpeta / archivo | Qué es |

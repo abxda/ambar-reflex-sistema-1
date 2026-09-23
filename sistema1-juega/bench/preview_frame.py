@@ -20,7 +20,7 @@ os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
 import pygame  # noqa: E402
 
 from agent.modes import replay  # noqa: E402
-from bench.render_video import GAME_NAME, LAYOUTS, card, compose, summary  # noqa: E402
+from bench.render_video import GAME_NAME, LAYOUTS, card, compose, model_label, summary  # noqa: E402
 from hud.panel import AMBER, BG, BRIGHT, DIM, RunView  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -46,7 +46,7 @@ def main():
         s = summary(meta, decisions)
         if args.card == "title":
             lines = [(GAME_NAME, 7, BRIGHT), ("", 2, BG), ("JUGADO EN TIEMPO REAL POR SISTEMA 1", 3, AMBER),
-                     ("QWEN3.5-4B LOCAL · DECISIONES TIPADAS · 0 TOKENS GENERADOS", 2, DIM), ("", 2, BG), ("@abxda", 3, AMBER)]
+                     (f"{model_label(meta)} LOCAL · DECISIONES TIPADAS · 0 TOKENS GENERADOS", 2, DIM), ("", 2, BG), ("@abxda", 3, AMBER)]
         else:
             lines = [("RESULTADO", 6, BRIGHT), ("", 2, BG),
                      (f"AVANCE {s['progress']:.0f}%   PUNTAJE {s['score']}   BAJAS {s['kills']}", 3, AMBER),
@@ -62,7 +62,7 @@ def main():
     for layout in args.layout:
         canvas = pygame.Surface(LAYOUTS[layout]["size"])
         game_surf = pygame.Surface((256, 240))
-        view = RunView(decisions, "jev-local")
+        view = RunView(decisions, model_label(meta))
 
         def on_frame(world, applied, current, layout=layout, canvas=canvas, view=view, game_surf=game_surf):
             view.advance(world.frame)

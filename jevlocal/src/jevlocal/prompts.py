@@ -34,12 +34,32 @@ SYSTEM_REFLEX = (
     "by choosing exactly one of the listed options. You never explain. You answer with "
     "the single option label only."
 )
-USER_OPEN = "<|im_start|>user\n"
-ASSISTANT_OPEN = "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+# Chat formats. "qwen": ChatML with an empty <think> block = no reasoning (System 1). "gemma": Gemma turns
+# (no system role, so the instruction opens the user turn). Selected once per server with set_chat().
+CHATS = {
+    "qwen": {"system": "<|im_start|>system\n{system}<|im_end|>\n", "user": "<|im_start|>user\n",
+             "assistant": "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"},
+    # Gemma 4 canonical template rendered with enable_thinking=False (checked against the GGUF's own template)
+    "gemma": {"system": "<bos><|turn>system\n{system}<turn|>\n", "user": "<|turn>user\n",
+              "assistant": "<turn|>\n<|turn>model\n"},
+}
+CHAT = "qwen"
+USER_OPEN = CHATS[CHAT]["user"]
+ASSISTANT_OPEN = CHATS[CHAT]["assistant"]
+
+
+def set_chat(name: str, spec: dict | None = None) -> None:
+    """Switch the chat format for every prompt built afterwards (one model per server)."""
+    global CHAT, USER_OPEN, ASSISTANT_OPEN
+    if spec:
+        CHATS[name] = spec
+    CHAT = name
+    USER_OPEN = CHATS[name]["user"]
+    ASSISTANT_OPEN = CHATS[name]["assistant"]
 
 
 def system_block(system: str) -> str:
-    return f"<|im_start|>system\n{system}<|im_end|>\n"
+    return CHATS[CHAT]["system"].format(system=system)
 
 
 def template_text(profile: str = "semif") -> str:

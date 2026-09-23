@@ -1,0 +1,83 @@
+{
+ "config": {
+  "data": [
+   "/mnt/data_4tb/JEV-CODING/bench-data/authored144.jsonl",
+   "/mnt/data_4tb/JEV-CODING/bench-data/wanli256.jsonl",
+   "/mnt/data_4tb/JEV-CODING/bench-data/every/gold154.jsonl"
+  ],
+  "gguf": null,
+  "url": "http://127.0.0.1:8765",
+  "model": "jev-latest",
+  "ref": [],
+  "debias": "none",
+  "option_style": "key",
+  "profile": "semif",
+  "batch": 16,
+  "ctx": 32768,
+  "seqs": 32,
+  "as_noul": false,
+  "out": "/mnt/data_4tb/JEV-CODING/sistema1-juega/runs/models/gemma4-e4b/eval.json"
+ },
+ "datasets": {
+  "authored144.jsonl": {
+   "raw": {
+    "n": 144,
+    "accuracy": 0.9027777777777778,
+    "balanced_accuracy": 0.9174469787915166,
+    "nll": 0.3571436425290393,
+    "brier": 0.1743083483386042,
+    "ece": 0.0814922274732098,
+    "mean_max_prob": 0.950262270458403
+   },
+   "seconds": 8.145071187000212,
+   "ms_per_row": 56.56299435416814
+  },
+  "wanli256.jsonl": {
+   "raw": {
+    "n": 256,
+    "accuracy": 0.70703125,
+    "balanced_accuracy": 0.7062927496580027,
+    "nll": 1.2859875944805819,
+    "brier": 0.5297568001355557,
+    "ece": 0.23804318352101733,
+    "mean_max_prob": 0.9405527967653572
+   },
+   "seconds": 14.531928272001096,
+   "ms_per_row": 56.76534481250428
+  },
+  "gold154.jsonl": {
+   "raw": {
+    "n": 154,
+    "accuracy": 0.9155844155844156,
+    "balanced_accuracy": 0.8643375680580763,
+    "nll": 0.3216174662376645,
+    "brier": 0.15212955449545454,
+    "ece": 0.07320555844155842,
+    "mean_max_prob": 0.9887899740259739
+   },
+   "seconds": 10.060382010999092,
+   "ms_per_row": 65.32715591557852
+  }
+ },
+ "pooled": {
+  "raw": {
+   "n": 554,
+   "accuracy": 0.8158844765342961,
+   "balanced_accuracy": 0.8576029109282884,
+   "nll": 0.7764812247505614,
+   "brier": 0.3323936721800745,
+   "ece": 0.15119031411002593,
+   "mean_max_prob": 0.9564854493103637
+  },
+  "fitted_temperature": 2.5,
+  "calibrated": {
+   "n": 554,
+   "accuracy": 0.8158844765342961,
+   "balanced_accuracy": 0.8576029109282884,
+   "nll": 0.5021728710563061,
+   "brier": 0.28522770850382817,
+   "ece": 0.03741145516414626,
+   "mean_max_prob": 0.8228935072790212
+  }
+ }
+}

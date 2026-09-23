@@ -82,6 +82,7 @@ class Engine:
         pad_leaves: float = 0.5,
         min_shared_tokens: int = 64,
         profile: str = "semif",
+        chat: str = "auto",
     ):
         import llama_cpp as L
 
@@ -122,6 +123,13 @@ class Engine:
             else:
                 raise EngineError("cannot create llama.cpp context: not enough GPU memory")
             print(f"[jevlocal] retrying with n_seq_max={cp.n_seq_max} n_ctx={cp.n_ctx}", file=sys.stderr, flush=True)
+        self.arch = self.meta("general.architecture") or "?"
+        self.model_name = self.meta("general.name") or Path(gguf).stem
+        if chat == "auto":
+            chat = "gemma" if self.arch.startswith("gemma") else "qwen"
+        from . import prompts
+        prompts.set_chat(chat)
+        self.chat = chat
         self.mem = L.llama_get_memory(self.ctx)
         self.vocab = L.llama_model_get_vocab(self.model)
         self.n_ctx = L.llama_n_ctx(self.ctx)
@@ -138,6 +146,11 @@ class Engine:
         root.seq = TEMPLATE_SEQ
         self._decode_wave([root], [])
         self.template_node = root
+
+    def meta(self, key: str) -> str | None:
+        buf = ctypes.create_string_buffer(4096)
+        n = self.L.llama_model_meta_val_str(self.model, key.encode(), buf, len(buf))
+        return buf.value.decode("utf-8", "replace") if n >= 0 else None
 
     # -- tokenizer ---------------------------------------------------------------
     def tokenize(self, text: str) -> list[int]:

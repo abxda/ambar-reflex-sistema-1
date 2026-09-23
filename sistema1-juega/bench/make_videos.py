@@ -79,6 +79,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--run", help="run to render, e.g. runs/bench/realtime/rt-D-1987-2 (default: best real-time run)")
     ap.add_argument("--out-dir", default=str(ROOT), help="writes <out-dir>/video/*.mp4 and <out-dir>/screenshots/*.png")
+    ap.add_argument("--only", nargs="+", default=["landscape", "vertical", "highlights"],
+                    choices=["landscape", "vertical", "highlights"])
     args = ap.parse_args(argv)
     run = Path(args.run).resolve() if args.run else best_run()
     if not run.with_suffix(".meta.json").exists():
@@ -93,10 +95,13 @@ def main(argv=None):
     for name, f in names:
         shots[min(f, m["frames"] - 1)] = str(out / "screenshots" / f"{name}.png")
     print("[video] best run:", run.name, json.dumps(m))
-    render(run, out / "video" / "sistema1_1080p60.mp4", "landscape", shots=shots)
-    render(run, out / "video" / "sistema1_vertical_1080x1920.mp4", "vertical")
-    render(run, out / "video" / "sistema1_momentos_clave.mp4", "landscape", clips=highlight_clips(m),
-           title_s=2.0, outro_s=4.0)
+    if "landscape" in args.only:
+        render(run, out / "video" / "sistema1_1080p60.mp4", "landscape", shots=shots)
+    if "vertical" in args.only:
+        render(run, out / "video" / "sistema1_vertical_1080x1920.mp4", "vertical")
+    if "highlights" in args.only:
+        render(run, out / "video" / "sistema1_momentos_clave.mp4", "landscape", clips=highlight_clips(m),
+               title_s=2.0, outro_s=4.0)
     (out / "video" / "video_meta.json").write_text(json.dumps({"run": run.name, "moments": m}, indent=1))
 
 

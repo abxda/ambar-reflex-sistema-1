@@ -1,0 +1,29 @@
+[
+ {
+  "key": "qwen35-4b",
+  "label": "QWEN3.5-4B Q8_0",
+  "progress": 27.32,
+  "lat": 409.8313157894737,
+  "acc": 77.79783393501805,
+  "run": "D",
+  "frames": 1147
+ },
+ {
+  "key": "gemma4-e4b",
+  "label": "GEMMA 4 E4B Q6_K",
+  "progress": 15.1,
+  "lat": 300.3903125,
+  "acc": 81.58844765342961,
+  "run": "D",
+  "frames": 776
+ },
+ {
+  "key": "qwen35-9b",
+  "label": "QWEN3.5-9B Q5_K_M",
+  "progress": 19.62,
+  "lat": 589.0942857142857,
+  "acc": 82.67148014440433,
+  "run": "D",
+  "frames": 1408
+ }
+]

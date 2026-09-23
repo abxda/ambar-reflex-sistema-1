@@ -50,6 +50,8 @@ def _engine_options() -> argparse.ArgumentParser:
                    help="also score the reversed option order and average (costs one extra branch per question)")
     g.add_argument("--profile", choices=["semif", "reflex"], default=_env("PROFILE", "semif"),
                    help="prompt layout: semif (JSON, default) or reflex (markdown)")
+    g.add_argument("--chat", choices=["auto", "qwen", "gemma"], default=_env("CHAT", "auto"),
+                   help="chat format; auto = from the GGUF architecture (qwen35 -> qwen, gemma* -> gemma)")
     g.add_argument("--option-style", choices=["key", "desc"], default=_env("OPTION_STYLE", "key"),
                    help="key: show 'option: description' (default); desc: description only (SemIf parity)")
     return p
@@ -60,10 +62,12 @@ def _engine(args):
 
     started = time.perf_counter()
     engine = Engine(args.gguf, n_ctx=args.ctx, n_seq_max=args.seqs, n_batch=args.batch, n_ubatch=args.ubatch,
-                    n_gpu_layers=args.gpu_layers, temperature=args.temperature, profile=args.profile)
+                    n_gpu_layers=args.gpu_layers, temperature=args.temperature, profile=args.profile,
+                    chat=args.chat)
     engine.warmup()
     print(f"[jevlocal] {Path(args.gguf).name} ready in {time.perf_counter() - started:.1f}s "
-          f"(ctx={engine.n_ctx}, seqs={engine.n_seq_max}, T={args.temperature})", file=sys.stderr, flush=True)
+          f"(arch={engine.arch}, chat={engine.chat}, ctx={engine.n_ctx}, seqs={engine.n_seq_max}, T={args.temperature})",
+          file=sys.stderr, flush=True)
     return engine
 
 
@@ -110,6 +114,7 @@ def main(argv=None) -> None:
 
         public = {"ctx": engine.n_ctx, "seqs": engine.n_seq_max, "temperature": args.temperature,
                   "debias": args.debias, "option_style": args.option_style, "profile": args.profile,
+                  "arch": engine.arch, "chat": engine.chat, "model_name": engine.model_name,
                   "version": __version__}
         serve(engine, host=args.host, port=args.port, served_name=args.served_name, gguf_name=Path(args.gguf).name,
               debias=args.debias, option_style=args.option_style, profile=args.profile, api_key=args.api_key, max_jobs=args.max_jobs,

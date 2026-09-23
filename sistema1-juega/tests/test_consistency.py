@@ -19,6 +19,16 @@ def test_social_numbers_come_from_results():
         assert not missing, f"numbers in {doc} not found as figures in results.md: {missing}"
 
 
+def test_comparison_numbers_come_from_results_modelos():
+    path = ROOT / "results_modelos.md"
+    if not path.exists():
+        return
+    tokens = set(re.findall(r"\d+(?:\.\d+)?", path.read_text()))
+    text = (ROOT / "video" / "PUBLICACION_COMPARACION.md").read_text()
+    missing = [n for n in set(NUM.findall(text)) if n not in tokens]
+    assert not missing, f"numbers in PUBLICACION_COMPARACION.md not in results_modelos.md: {missing}"
+
+
 def test_latency_recomputes_from_logs():
     R = json.loads((ROOT / "results.json").read_text())
     lat = [json.loads(l)["rtt_ms"] for p in sorted((ROOT / "runs" / "bench" / "realtime").glob("*.jsonl"))
