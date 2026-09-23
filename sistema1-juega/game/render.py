@@ -1,8 +1,16 @@
-"""Draw the world at 256x240 (8-bit look) and upscale x4 with nearest-neighbor (+ optional CRT)."""
+"""Original military arcade art, 256x240, nearest-neighbor CRT.
+
+Experience: the recorded firefight leads; telemetry remains truthful.
+World: dusk refinery, blue steel, copper sky, amber instruments.
+Silhouettes: bare arms, teal combat vest, red hostile armor, machined weapons.
+Depth: distant ridges, refinery silhouettes, pipework, riveted foreground.
+Boundary: drawing reads the simulation; animation never changes its state.
+"""
 
 from __future__ import annotations
 
 import math
+from weakref import WeakKeyDictionary
 
 import pygame
 
@@ -12,8 +20,8 @@ from . import sprites as S
 from .core import DIR_VEC, World
 
 THEMES = {  # sky bands top->bottom, far silhouettes, mid structures, ground top, ground body, ground dither
-    "REFINERIA": ([(252, 188, 116), (240, 140, 80), (200, 92, 64), (136, 60, 72)], (112, 52, 64), (72, 40, 56),
-                  (236, 180, 100), (168, 112, 56), (132, 84, 40)),
+    "REFINERIA": ([(32, 38, 65), (94, 60, 77), (178, 91, 83), (236, 149, 105)], (85, 66, 82), (33, 46, 61),
+                  (170, 183, 174), (42, 56, 67), (26, 37, 50)),
     "CANON": ([(120, 88, 180), (160, 96, 168), (208, 112, 128), (236, 152, 112)], (84, 48, 104), (120, 56, 64),
               (212, 140, 96), (152, 80, 56), (112, 56, 44)),
     "REACTOR": ([(8, 24, 40), (12, 40, 56), (16, 56, 72), (20, 72, 80)], (24, 48, 64), (32, 72, 88),
@@ -35,13 +43,25 @@ def _background(s: pygame.Surface, w: World, theme):
     for i, c in enumerate(sky):
         s.fill(c, (0, i * band, L.SCREEN_W, band + 1))
     s.fill(sky[-1], (0, len(sky) * band, L.SCREEN_W, L.SCREEN_H))
+    # Pixel-dithered band transitions and a sun behind the refinery stacks.
+    for i in range(1, len(sky)):
+        for yy in range(i * band - 5, i * band + 5):
+            for xx in range((yy % 2) * 2, L.SCREEN_W, 4):
+                if (yy - i * band + 5) < ((xx // 4) % 5) * 2:
+                    s.fill(sky[i - 1], (xx, yy, 2, 1))
+    sunx = int(201 - w.cam * .08) % 320
+    pygame.draw.circle(s, (250, 183, 119), (sunx, 79), 19)
+    for yy in range(79, 100, 4):
+        s.fill(sky[2], (sunx - 20, yy, 40, 1))
     # far silhouettes (parallax 0.2): mesas / ridges
     off = w.cam * 0.2
     for i in range(-1, 12):
         k = int(off // 32) + i
         x = k * 32 - off
         h = 40 + int(_hash(k) * 50)
-        s.fill(far, (int(x), 150 - h, 33, h + 60))
+        pygame.draw.polygon(s, far, [(int(x), 160), (int(x), 150-h+17),
+                                    (int(x)+12, 150-h), (int(x)+25, 154-h),
+                                    (int(x)+38, 125), (int(x)+38, 180)])
     # mid structures (parallax 0.5): towers, tanks, pipes
     off = w.cam * 0.5
     for i in range(-1, 8):
@@ -52,11 +72,39 @@ def _background(s: pygame.Surface, w: World, theme):
             h = 50 + int(r * 80)
             s.fill(mid, (x + 10, 175 - h, 10, h))
             s.fill(mid, (x + 6, 175 - h, 18, 4))
+            for yy in range(178 - h, 172, 12):
+                s.fill((61, 67, 78), (x + 11, yy, 2, 7))
+                s.fill((78, 72, 79), (x + 10, yy + 8, 10, 1))
+            # Deterministic exhaust, behind the active playfield.
+            for j in range(4):
+                drift = (w.frame // 8 + j * 6) % 24
+                pygame.draw.circle(s, far, (x + 15 + drift // 3, 170-h-drift), 2+j)
             if (w.frame // 20 + k) % 3 == 0:
                 s.fill((252, 96, 48), (x + 13, 171 - h, 4, 3))
         elif r < 0.75:
             pygame.draw.ellipse(s, mid, (x + 4, 140, 34, 40))
             s.fill(mid, (x + 4, 160, 34, 20))
+            pygame.draw.arc(s, (69, 76, 86), (x+7, 144, 28, 18), 0, math.pi, 1)
+            for xx in range(x + 10, x + 35, 8):
+                s.fill((51, 65, 77), (xx, 153, 1, 26))
+            s.fill((79, 80, 86), (x+4, 169, 34, 2))
+        else:
+            pygame.draw.line(s, mid, (x+8, 180), (x+8, 100), 3)
+            pygame.draw.line(s, mid, (x+36, 180), (x+36, 100), 3)
+            for yy in range(104, 180, 16):
+                pygame.draw.line(s, mid, (x+8, yy), (x+36, yy+16), 2)
+                pygame.draw.line(s, mid, (x+36, yy), (x+8, yy+16), 2)
+            pygame.draw.line(s, mid, (x, 99), (x+46, 99), 4)
+    # Near service conduits travel at a third parallax speed.
+    off = int(w.cam * .75)
+    for base in range(off // 96 - 1, off // 96 + 4):
+        x = base * 96 - off
+        s.fill((23, 34, 47), (x, 177, 96, 7))
+        s.fill((63, 80, 91), (x, 177, 96, 1))
+        s.fill((96, 105, 106), (x+14, 175, 3, 11))
+        s.fill((19, 29, 42), (x+19, 157, 37, 20))
+        for xx in range(x+23, x+52, 5):
+            s.fill((52, 67, 77), (xx, 161, 2, 11))
 
 
 def _terrain(s: pygame.Surface, w: World, theme):
@@ -69,11 +117,16 @@ def _terrain(s: pygame.Surface, w: World, theme):
             continue
         s.fill(body, (x, gy, L.TILE, L.SCREEN_H - gy))
         s.fill(top, (x, gy, L.TILE, 3))
-        for yy in range(gy + 6, L.SCREEN_H, 6):
-            for xx in range(0, L.TILE, 4):
-                if (xx // 4 + yy // 6 + c) % 2 == 0:
-                    s.fill(dith, (x + xx, yy, 2, 2))
-        s.fill((0, 0, 0), (x, gy + 3, L.TILE, 1)) if False else None
+        s.fill((13, 22, 32), (x, gy + 3, L.TILE, 3))
+        for xx in range(0, L.TILE, 8):
+            s.fill((221, 158, 62) if (c + xx // 8) % 2 else dith, (x+xx, gy+4, 5, 2))
+        for yy in range(gy + 9, L.SCREEN_H, 16):
+            s.fill(dith, (x, yy, L.TILE-1, 15))
+            s.fill(body, (x+1, yy+1, L.TILE-3, 1))
+            s.fill((90, 107, 113), (x+2, yy+3, 1, 1))
+            s.fill((10, 19, 30), (x+2, yy+5, 1, 1))
+            for xx in range(5, L.TILE-2, 4):
+                s.fill((18, 28, 40), (x+xx, yy+5, 2, 6))
     for x0, y0, wd in L.PLATFORMS:
         x = x0 - int(w.cam)
         if -wd < x < L.SCREEN_W:
@@ -82,9 +135,20 @@ def _terrain(s: pygame.Surface, w: World, theme):
             for xx in range(0, wd, 8):
                 pygame.draw.line(s, (64, 64, 80), (x + xx, y0 + 4), (x + xx + 4, y0 + 8))
             s.fill((64, 64, 80), (x, y0 + 8, wd, 1))
+            for xx in range(2, wd-2, 12):
+                s.fill((233, 165, 65), (x+xx, y0+2, 4, 2))
+                s.fill((200, 206, 188), (x+xx, y0, 1, 1))
+
+
+_poses = WeakKeyDictionary()
 
 
 def _player(s: pygame.Surface, w: World):
+    previous = _poses.get(w)
+    moving = previous is not None and abs(w.px - previous[1]) > .1
+    if previous is not None and previous[0] == w.frame:
+        moving = previous[2]
+    _poses[w] = (w.frame, w.px, moving)
     if w.dead_timer or (w.invuln and (w.frame // 3) % 2):
         return
     flip = w.facing < 0
@@ -92,11 +156,10 @@ def _player(s: pygame.Surface, w: World):
         grid = S.PLAYER_BALL
     elif w.crouching:
         grid = S.PLAYER_CROUCH
-    elif abs(w.px - getattr(w, "_last_px", w.px)) > 0.1:
-        grid = S.PLAYER_RUN[(w.frame // 6) % 2]
+    elif moving:
+        grid = S.PLAYER_RUN[(w.frame // 5) % 4]
     else:
         grid = S.PLAYER_STAND
-    w._last_px = w.px
     spr = S.sprite(grid, flip)
     x = int(w.px - w.cam) - spr.get_width() // 2
     y = int(w.py) - spr.get_height() - (4 if not w.on_ground else 0)
@@ -105,8 +168,16 @@ def _player(s: pygame.Surface, w: World):
     gx, gy = w.gun()
     dx, dy = DIR_VEC[w.aim]
     sx, sy = gx - w.cam - dx * 6, gy - dy * 6
-    pygame.draw.line(s, S.PAL["g"], (sx, sy), (sx + dx * 8, sy + dy * 8), 3)
-    pygame.draw.line(s, S.PAL["G"], (sx, sy), (sx + dx * 8, sy + dy * 8), 1)
+    pygame.draw.line(s, S.PAL["K"], (sx-dx*3, sy-dy*3), (sx + dx * 10, sy + dy * 10), 5)
+    pygame.draw.line(s, S.PAL["g"], (sx, sy), (sx + dx * 10, sy + dy * 10), 3)
+    pygame.draw.line(s, S.PAL["G"], (sx, sy-1), (sx + dx * 8, sy + dy * 8-1), 1)
+    # Only real newly emitted projectiles light the muzzle.
+    if any(abs(sh.x-gx) < 13 and abs(sh.y-gy) < 13 for sh in w.pshots):
+        mx, my = int(gx-w.cam+dx*6), int(gy+dy*6)
+        pygame.draw.polygon(s, S.PAL["O"], [(mx+dx*7,my+dy*7), (mx-dy*3,my+dx*3),
+                                             (mx-dx*2,my-dy*2), (mx+dy*3,my-dx*3)])
+        pygame.draw.circle(s, S.PAL["Y"], (mx,my), 2)
+        s.fill(S.PAL["W"], (mx,my,1,1))
     if w.shield:
         r = 16 + (w.frame // 4) % 2
         pygame.draw.circle(s, (80, 208, 248), (int(w.px - w.cam), int(w.py) - 12), r, 1)
@@ -160,6 +231,8 @@ def _enemies(s: pygame.Surface, w: World):
 
 def _shots_fx(s: pygame.Surface, w: World):
     for sh in w.pshots:
+        pygame.draw.line(s, (211, 133, 52), (int(sh.x-w.cam-sh.vx), int(sh.y-sh.vy)),
+                         (int(sh.x-w.cam), int(sh.y)), 2)
         pygame.draw.circle(s, (252, 252, 200), (int(sh.x - w.cam), int(sh.y)), 2)
     for sh in w.eshots:
         c = {"high": (252, 96, 96), "aimed": (252, 160, 64), "bomb": (252, 220, 96), "orb": (252, 64, 200)}.get(sh.kind, (252, 96, 96))
@@ -168,15 +241,34 @@ def _shots_fx(s: pygame.Surface, w: World):
     for x, y, t, kind in w.fx:
         cx, cy = int(x - w.cam), int(y)
         if kind == "boom":
-            r = 3 + t // 2
-            pygame.draw.circle(s, (252, 224, 96) if t < 8 else (252, 136, 32), (cx, cy), r)
-            if t > 6:
-                pygame.draw.circle(s, (120, 40, 24), (cx, cy), max(1, r - 4))
+            r = 4 + min(t, 12)
+            for j in range(7):
+                a = j * math.tau / 7 + _hash(int(x)+j) * .8
+                rr = r * .6
+                pos = (int(cx+math.cos(a)*rr), int(cy+math.sin(a)*rr-t*.16))
+                pygame.draw.circle(s, (71, 49, 56), pos, max(2, 7-t//5))
+                if t < 17:
+                    pygame.draw.circle(s, (198, 61, 38), pos, max(1, 6-t//4))
+                    pygame.draw.circle(s, (255, 154, 48), pos, max(1, 4-t//5))
+            if t < 12:
+                pygame.draw.circle(s, (255, 217, 107), (cx,cy), max(1, 9-t//2))
+                pygame.draw.circle(s, (255, 250, 216), (cx,cy), max(1, 6-t//2))
+            for j in range(9):
+                a = j * math.tau / 9
+                rr = 4 + t * (1+_hash(j+int(x)))
+                ex, ey = cx+math.cos(a)*rr, cy+math.sin(a)*rr+t*t*.022
+                pygame.draw.line(s, (255, 194, 76) if t < 13 else (155, 89, 62),
+                                 (int(ex),int(ey)), (int(ex-math.cos(a)*3),int(ey-math.sin(a)*3)))
         else:
             pygame.draw.circle(s, (255, 255, 255), (cx, cy), 2 if t < 4 else 1)
 
 
 def _hud(s: pygame.Surface, w: World):
+    s.fill((12, 20, 31), (0, 0, 256, 25))
+    s.fill((80, 100, 110), (0, 24, 256, 1))
+    font.draw(s, "1P", 8, 17, (240, 164, 67))
+    font.draw(s, "PUNTAJE", 96, 17, (139, 159, 168))
+    font.draw(s, "EQUIPO", 196, 17, (139, 159, 168))
     for i in range(max(0, w.lives)):
         s.fill((0, 168, 160), (8 + i * 9, 8, 6, 9))
         s.fill((248, 184, 0), (9 + i * 9, 10, 4, 2))

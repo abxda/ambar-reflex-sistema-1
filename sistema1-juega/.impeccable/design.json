@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-23T00:18:08Z",
+  "title": "Design System: Ámbar Reflex",
+  "extensions": {
+    "nativeRendering": {
+      "runtime": "pygame",
+      "tokenSource": "DESIGN.md frontmatter",
+      "worldSize": [256, 240],
+      "scale": 4,
+      "sampling": "nearest-neighbor",
+      "simulationHz": 60,
+      "glyphInkSize": [5, 7],
+      "glyphCellSize": [6, 9],
+      "paletteSources": ["game/sprites.py:PAL (including PAL.update)", "game/render.py:THEMES", "hud/panel.py"],
+      "layouts": {
+        "landscape": {"canvas": [1920, 1080], "game": [64, 60, 1024, 960], "panel": [1136, 24, 760, 1032]},
+        "vertical": {"canvas": [1080, 1920], "game": [28, 60, 1024, 960], "panel": [28, 1040, 1024, 852]}
+      },
+      "crt": {"blackAlpha": 70, "rowHeight": 1, "rowPeriod": 4},
+      "watermark": {"text": "@abxda", "alpha": 102},
+      "note": "Native rendering metadata replaces HTML/CSS previews. No synthetic web controls or unimplemented tonal ramps."
+    },
+    "motion": [
+      {"name": "decision-fade", "value": "0.4s", "purpose": "Probability-weighted arrows fade from the logged arrival frame."},
+      {"name": "decision-border", "value": "4 frames", "purpose": "Panel border signals a newly arrived answer."},
+      {"name": "run-cycle", "value": "4 poses, 5 frames per pose", "purpose": "Render-only player gait when position changes."},
+      {"name": "parallax", "value": "0.2 / 0.5 / 0.75 camera multipliers", "purpose": "Separate distant ridges, refinery structures and near conduits."}
+    ]
+  },
+  "components": [
+    {"name": "Arcade world", "kind": "custom", "description": "Native pixel scene; game/render.py:draw_world."},
+    {"name": "Telemetry panel", "kind": "custom", "refersTo": "telemetry-panel", "description": "Logged decision probabilities, state, metrics and latency; hud/panel.py:draw_panel."},
+    {"name": "Probability track", "kind": "custom", "refersTo": "probability-track", "description": "Threshold marks, selected outline and dark value plates; hud/panel.py:_bar."},
+    {"name": "Decision fan", "kind": "custom", "description": "Arrival-synchronized probability arrows; hud/panel.py:draw_overlay."},
+    {"name": "Title and result card", "kind": "custom", "description": "Dimmed refinery backdrop and bitmap lettering; bench/render_video.py:card."}
+  ],
+  "narrative": {
+    "northStar": "Refinería al atardecer, instrumentos ámbar",
+    "overview": "El combate grabado dirige la experiencia: un arcade militar de finales de los ochenta, con brazos descubiertos, chaleco verde azulado, enemigos rojos y armas mecanizadas. El referente de género elegido es Super Contra; los personajes, escenarios, tipografía y demás assets son originales del proyecto.\n\nLa densidad procede del pixel art y de instrumentos que muestran decisiones reales. Este documento captura la implementación nativa en pygame; no describe una interfaz web. Las fuentes de producto son `README.md` y `../ARQUITECTURA_GRAFICA.md`; para valores visuales vigentes manda el código.",
+    "keyCharacteristics": ["Pixel art nativo y ampliación entera sin suavizado.", "Acero azul, cielo cobrizo y terminal ámbar.", "Profundidad mediante siluetas, parallax, tramado y detalles mecánicos.", "Telemetría sincronizada con la llegada real de cada decisión."],
+    "rules": [],
+    "dos": ["**Do** conservar resolución nativa, ampliación entera y fuente bitmap propia.", "**Do** comprobar legibilidad y encaje en horizontal y vertical, incluidas cifras sobre barras.", "**Do** derivar estados, cifras y tiempos de los logs; el render solo lee la simulación.", "**Do** mantener originales los assets y visible la autoría `@abxda`."],
+    "donts": ["**Don't** modificar `game/core.py`, `game/level.py`, políticas o `runs/**` para mejorar el aspecto.", "**Don't** ocultar FALLBACK, inventar probabilidades o anticipar decisiones a `req_frame`.", "**Don't** importar personajes, sprites, logotipos, música o niveles de franquicias.", "**Don't** añadir controles web, fuentes suavizadas o paneles redondeados ajenos al sistema nativo."]
+  }
+}

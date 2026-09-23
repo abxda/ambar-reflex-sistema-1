@@ -19,8 +19,8 @@ import pygame  # noqa: E402
 from agent.modes import replay  # noqa: E402
 from game import font  # noqa: E402
 from game.audio import SR, render_track  # noqa: E402
-from game.core import FPS  # noqa: E402
-from game.render import draw_world, upscale  # noqa: E402
+from game.core import FPS, World  # noqa: E402
+from game.render import THEMES, _background, _terrain, draw_world, upscale  # noqa: E402
 from hud.panel import AMBER, BG, BRIGHT, DIM, RunView, draw_overlay, draw_panel, watermark  # noqa: E402
 
 GAME_NAME = "ÁMBAR REFLEX"
@@ -30,13 +30,34 @@ LAYOUTS = {
 }
 
 
+_card_backdrops = {}
+
+
 def card(canvas: pygame.Surface, lines: list, t: float) -> None:
-    canvas.fill(BG)
     W, H = canvas.get_size()
+    if (W, H) not in _card_backdrops:
+        art = pygame.Surface((256, 240))
+        scene = World()
+        _background(art, scene, THEMES["REFINERIA"])
+        _terrain(art, scene, THEMES["REFINERIA"])
+        # Scenery only: no gameplay labels or actors behind title text.
+        art = art.subsurface((0, 26, 256, 214))
+        factor = max((W + 255)//256, (H + 213)//214)
+        back = pygame.transform.scale(art, (256*factor, 214*factor))
+        back.fill((105, 112, 125), special_flags=pygame.BLEND_RGB_MULT)
+        _card_backdrops[(W,H)] = back
+    canvas.blit(_card_backdrops[(W,H)], (0,0))
     y = H // 2 - sum(sc * 12 for _, sc, _ in lines) // 2
+    panel = pygame.Rect(40, y-54, W-80, sum(sc*12 for _, sc, _ in lines)+92)
+    canvas.fill((10, 19, 29), panel)
+    pygame.draw.line(canvas, AMBER, (panel.left, panel.top), (panel.right, panel.top), 4)
+    pygame.draw.line(canvas, DIM, (panel.left, panel.bottom), (panel.right, panel.bottom), 2)
     for text, sc, col in lines:
+        sc = min(sc, max(2, (W-120)//max(1, font.width(text))))
         x = (W - font.width(text, sc)) // 2
         vis = text[: max(0, int(len(text) * min(1.0, t * 2.5)))] if sc >= 5 else text
+        if sc >= 5:
+            font.draw(canvas, vis, x+sc, y+sc, (139, 58, 38), sc)
         font.draw(canvas, vis, x, y, col, sc)
         y += sc * 12
     watermark(canvas, W - font.width("@abxda", 4) - 40, H - 80, 4)
@@ -44,7 +65,13 @@ def card(canvas: pygame.Surface, lines: list, t: float) -> None:
 
 def compose(canvas, layout, world, view, frame, game_surf):
     L = LAYOUTS[layout]
-    canvas.fill((0, 0, 0))
+    canvas.fill((10, 17, 26))
+    g = L["game"]
+    pygame.draw.rect(canvas, (62, 80, 91), g.inflate(12, 12), 2)
+    for xx in (g.left-12, g.right+8):
+        for yy in (g.top-12, g.bottom+8):
+            pygame.draw.rect(canvas, (169, 149, 105), (xx, yy, 4, 4))
+    font.draw(canvas, GAME_NAME, g.x, g.y-34, BRIGHT, 3)
     draw_world(game_surf, world)
     big = upscale(game_surf, 4, crt=True)
     canvas.blit(big, L["game"].topleft)

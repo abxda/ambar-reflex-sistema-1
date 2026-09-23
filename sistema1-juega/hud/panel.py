@@ -12,7 +12,7 @@ from game import font
 from game.core import DIR_VEC, DIRS, FPS
 
 AMBER = (255, 176, 0)
-DIM = (120, 82, 0)
+DIM = (184, 137, 65)
 FAINT = (52, 36, 0)
 BRIGHT = (255, 224, 140)
 RED = (255, 84, 60)
@@ -65,7 +65,13 @@ class RunView:
 def _bar(s, x, y, w, h, p, color, label, value_txt, sc=2, win=False):
     s.fill(FAINT, (x, y, w, h))
     s.fill(color if win else DIM, (x, y, int(w * max(0.0, min(1.0, p))), h))
-    font.draw(s, label, x + 6, y + (h - 9 * sc) // 2 + sc, BG if (win and p > 0.25) else AMBER, sc)
+    for threshold in (.5, .9):
+        s.fill(BG, (x + int(w * threshold), y, 1, 4))
+        s.fill(BG, (x + int(w * threshold), y + h - 4, 1, 4))
+    if win:
+        pygame.draw.rect(s, BRIGHT, (x, y, w, h), 1)
+    s.fill(BG, (x + 3, y + 3, font.width(label, sc) + 6, h - 6))
+    font.draw(s, label, x + 6, y + (h - 9 * sc) // 2 + sc, BRIGHT if win else AMBER, sc)
     tw = font.width(value_txt, sc)
     tx = x + w - tw - 6
     s.fill(BG, (tx - 4, y + 3, tw + 8, h - 6))  # own dark plate: always readable over the fill
@@ -88,6 +94,7 @@ def draw_panel(s: pygame.Surface, rect: pygame.Rect, view: RunView, world, frame
     bw = W - 2 * pad
     if d is None:
         font.draw(s, "ESPERANDO PRIMERA DECISIÓN...", x, y, AMBER, 2)
+        watermark(s, x0 + W - font.width(WATERMARK, 3) - pad, y0 + H - 40, 3)
         return
     ans = d["raw"]["answers"]
     tag = d["tag"]
@@ -107,8 +114,8 @@ def draw_panel(s: pygame.Surface, rect: pygame.Rect, view: RunView, world, frame
         y += 34
     y += 6
     # aim rose + danger gauge side by side
-    rose_r = min(92, (bw // 2 - 30) // 2 + 20)
-    cx, cy = x + rose_r + 10, y + rose_r + 24
+    rose_r = 54 if H < 900 else 80
+    cx, cy = x + rose_r + 24, y + rose_r + 40
     font.draw(s, "APUNTAR", x, y, BRIGHT, 2)
     probs = ans["aim"]["probabilities"]
     best = ans["aim"]["choice"]
@@ -120,7 +127,7 @@ def draw_panel(s: pygame.Surface, rect: pygame.Rect, view: RunView, world, frame
         c = BRIGHT if dname == best else DIM
         pygame.draw.line(s, c, (cx, cy), (cx + dx * L, cy + dy * L), 6 if dname == best else 3)
         tx, ty = cx + dx * (rose_r + 14), cy + dy * (rose_r + 14)
-        font.draw(s, dname, int(tx - font.width(dname, 1) / 2), int(ty - 5), AMBER if dname == best else DIM, 1)
+        font.draw(s, dname, int(tx - font.width(dname, 2) / 2), int(ty - 7), AMBER if dname == best else DIM, 2)
     font.draw(s, f"{best} {probs[best]:.2f}", cx - 30, cy + rose_r + 28, AMBER, 2)
     # danger gauge
     gx, gy, gr = x + bw * 3 // 4, cy + 20, rose_r
@@ -137,8 +144,7 @@ def draw_panel(s: pygame.Surface, rect: pygame.Rect, view: RunView, world, frame
     pygame.draw.line(s, BRIGHT, (gx, gy), (gx + math.cos(a) * (gr - 6), gy - math.sin(a) * (gr - 6)), 4)
     pygame.draw.circle(s, BRIGHT, (gx, gy), 6)
     font.draw(s, f"{danger:.2f}", gx - 24, gy + 14, AMBER, 2)
-    font.draw(s, "SEGURO", gx - gr - 10, gy + 14, DIM, 1)
-    font.draw(s, "CRÍTICO", gx + gr - 36, gy + 14, DIM, 1)
+    font.draw(s, "SEGURO / CRÍTICO", gx - 90, gy + 38, DIM, 2)
     y = cy + rose_r + 60
     # tag
     font.draw(s, TAG_TEXT[tag], x, y, TAG_COLOR[tag], 3)
@@ -152,26 +158,26 @@ def draw_panel(s: pygame.Surface, rect: pygame.Rect, view: RunView, world, frame
     cw = bw // 3
     for i, (k, v) in enumerate(rows):
         rx, ry = x + (i % 3) * cw, y + (i // 3) * 42
-        font.draw(s, k, rx, ry, DIM, 1)
-        font.draw(s, v, rx, ry + 12, BRIGHT, 2)
+        font.draw(s, k, rx, ry, DIM, 2)
+        font.draw(s, v, rx, ry + 20, BRIGHT, 2)
     y += 3 * 42 + 6
     # latency sparkline
     series = m["lat_series"]
-    sh = 50
-    font.draw(s, "LATENCIA (MS)", x, y, DIM, 1)
-    y += 12
+    sh = 32 if H < 900 else 50
+    font.draw(s, "LATENCIA (MS)", x, y, DIM, 2)
+    y += 20
     s.fill(FAINT, (x, y, bw, sh))
     if len(series) > 1:
         hi = max(max(series), 1.0)
         pts = [(x + i * (bw - 1) / (len(series) - 1), y + sh - 2 - (v / hi) * (sh - 6)) for i, v in enumerate(series)]
         pygame.draw.lines(s, AMBER, False, pts, 2)
-        font.draw(s, f"{hi:.0f}", x + bw - font.width(f"{hi:.0f}", 1) - 4, y + 3, DIM, 1)
+        font.draw(s, f"{hi:.0f}", x + bw - font.width(f"{hi:.0f}", 2) - 4, y + 3, BRIGHT, 2)
     y += sh + 12
     # scrolling log
-    font.draw(s, "LOG", x, y, DIM, 1)
-    y += 14
-    lines = max(1, (y0 + H - pad - y) // 20)
-    for rec in view.arrived[-lines:]:
+    font.draw(s, "LOG", x, y, DIM, 2)
+    y += 22
+    lines = max(0, (y0 + H - 50 - y) // 20)
+    for rec in (view.arrived[-lines:] if lines else []):
         act = rec["action"]
         mv = {1: "AVZ", -1: "RET", 0: "QTO"}[act["move"]]
         parts = f"{rec['arr_frame'] / FPS:6.1f}S {mv} {act['aim']:<2} {'DISP' if act['shoot'] else '----'} " \

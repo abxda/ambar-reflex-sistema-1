@@ -20,6 +20,28 @@ niveles de ninguna franquicia. **Todos los assets se generan por código en este
 
 No hay assets CC0 externos.
 
+## Edición visual arcade — septiembre de 2026
+
+Sprites originales de comando con chaleco turquesa y soldados con armadura roja; carrera de cuatro
+poses, arma orientable y destello ligado a los proyectiles. La refinería combina cielo tramado,
+montañas, depósitos, torres y conductos con parallax; el terreno incorpora acero, remaches y marcas
+de precaución. Explosiones por fases, humo y chispas se dibujan desde los efectos de la partida.
+El panel conserva los datos originales, mejora el contraste y compacta sus instrumentos en vertical.
+Las tarjetas de entrada y resultado usan el escenario como fondo.
+
+El sistema visual se documenta en [DESIGN.md](DESIGN.md). Para regenerar los tres videos y cuatro
+capturas de la misma partida, sin servidor ni GPU:
+
+```bash
+.venv/bin/python -m pytest -q tests
+md5sum -c runs/.game_code.md5
+nice -n 10 .venv/bin/python -m bench.make_videos --run runs/bench/realtime/rt-D-1987-2
+```
+
+`tests/test_render.py` comprueba que dibujar cada uno de los 1,147 fotogramas no modifica el mundo
+y que volver a pintar un mismo fotograma produce los mismos píxeles. Las huellas antiguas de los
+MP4 en `../REGENERAR_VIDEOS.md` corresponden al diseño previo; las duraciones y formatos se conservan.
+
 ## Estructura
 ```
 game/      simulación determinista 60 Hz (core), nivel, render 256×240 ×4 + CRT, sprites, fuente, audio,
